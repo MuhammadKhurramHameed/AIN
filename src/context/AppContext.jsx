@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_DATA } from '../data/initialData';
+import { apiService } from '../services/api';
 
 const AppContext = createContext();
 
@@ -98,6 +99,58 @@ export const AppProvider = ({ children }) => {
   const [activeModal, setActiveModal] = useState(null);
   const [modalData, setModalData] = useState(null);
   const [capstoneScore, setCapstoneScore] = useState(92.5);
+  const [isBackendConnected, setIsBackendConnected] = useState(false);
+
+  // Initial Fetch from Backend Server
+  useEffect(() => {
+    async function loadBackendData() {
+      const health = await apiService.getHealth();
+      if (health && health.status === 'HEALTHY') {
+        setIsBackendConnected(true);
+        console.log('[AppContext] Connected to Express + MongoDB backend server!');
+
+        const progRes = await apiService.getProgrammeSummary();
+        if (progRes && progRes.success) {
+          setProgramme({
+            registered_count: progRes.data.registeredCount,
+            female_registered_count: progRes.data.femaleRegisteredCount,
+            target_participants: progRes.data.targetParticipants,
+            target_female_ratio: progRes.data.targetFemaleRatio,
+            verified_hours_total: progRes.data.verifiedHoursTotal,
+            certificates_issued: progRes.data.certificatesIssued
+          });
+        }
+
+        const partnerRes = await apiService.getPartners();
+        if (partnerRes && partnerRes.success && partnerRes.data.length > 0) {
+          setPartners(partnerRes.data.map(p => ({
+            id: p._id,
+            name: p.name,
+            email: p.email,
+            mou_ref: p.mouRef,
+            allocated_capacity: p.allocatedCapacity,
+            enrolled: p.enrolled,
+            active_cohorts: p.activeCohorts,
+            status: p.status
+          })));
+        }
+
+        const logRes = await apiService.getAuditLogs();
+        if (logRes && logRes.success && logRes.data.length > 0) {
+          setAuditLogs(logRes.data.map(l => ({
+            id: l._id,
+            timestamp: l.timestamp,
+            actor: l.actor,
+            action: l.action,
+            entity: l.entity,
+            ip: l.ip,
+            payload: l.payload
+          })));
+        }
+      }
+    }
+    loadBackendData();
+  }, []);
 
   // Switch Role
   const switchRole = (roleCode) => {
@@ -112,7 +165,7 @@ export const AppProvider = ({ children }) => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  // Live WebSocket Heartbeat Simulation
+  // Live Telemetry Simulation
   useEffect(() => {
     const timer = setInterval(() => {
       setHeartbeatPing(prev => prev + 1);
@@ -121,8 +174,11 @@ export const AppProvider = ({ children }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Register New Trainee Intake
-  const registerTrainee = (formData) => {
+  // Register New Trainee Intake (Syncs with Express API + State)
+  const registerTrainee = async (formData) => {
+    // Call backend API
+    const res = await apiService.registerTrainee(formData);
+    
     setProgramme(prev => {
       const regCount = prev.registered_count + 1;
       const femaleCount = formData.gender === "FEMALE" ? prev.female_registered_count + 1 : prev.female_registered_count;
@@ -135,7 +191,7 @@ export const AppProvider = ({ children }) => {
 
     // Add Audit Log
     const newLog = {
-      id: `log-${Math.floor(Math.random() * 90000 + 10000)}`,
+      id: res && res.success ? res.user.id : `log-${Math.floor(Math.random() * 90000 + 10000)}`,
       timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
       actor: "Public Registration Intake Engine",
       action: "TRAINEE_REGISTERED",
@@ -146,10 +202,12 @@ export const AppProvider = ({ children }) => {
     setAuditLogs(prev => [newLog, ...prev]);
   };
 
-  // Add Consortium Partner
-  const addPartner = (partnerData) => {
+  // Add Consortium Partner (Syncs with Express API + State)
+  const addPartner = async (partnerData) => {
+    const res = await apiService.addPartner(partnerData);
+
     const newPartner = {
-      id: `cons-${partners.length + 1}`,
+      id: res && res.success ? res.data._id : `cons-${partners.length + 1}`,
       name: partnerData.name,
       email: partnerData.email,
       mou_ref: partnerData.mou_ref || `MOU-MoITT-2026-00${partners.length + 1}`,
@@ -179,6 +237,7 @@ export const AppProvider = ({ children }) => {
       activeModal,
       modalData,
       capstoneScore,
+      isBackendConnected,
       setCapstoneScore,
       switchRole,
       navigateTo,

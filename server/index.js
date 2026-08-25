@@ -1,0 +1,55 @@
+import express from 'express';
+import dotenv from 'dotenv';
+import cors from 'cors';
+import morgan from 'morgan';
+import { connectDB } from './config/db.js';
+
+import authRoutes from './routes/authRoutes.js';
+import intakeRoutes from './routes/intakeRoutes.js';
+import programmeRoutes from './routes/programmeRoutes.js';
+import partnerRoutes from './routes/partnerRoutes.js';
+import trackRoutes from './routes/trackRoutes.js';
+import certRoutes from './routes/certRoutes.js';
+import auditRoutes from './routes/auditRoutes.js';
+
+dotenv.config();
+
+const app = express();
+const PORT = process.env.PORT || 5000;
+
+// Connect Database
+connectDB();
+
+// Middleware
+app.use(cors());
+app.use(express.json());
+app.use(morgan('dev'));
+
+// Health Check Endpoint
+app.get('/api/v1/health', (req, res) => {
+  res.json({
+    status: 'HEALTHY',
+    appName: process.env.APP_NAME || 'National AI Advancement Initiative LMS',
+    environment: process.env.NODE_ENV,
+    timestamp: new Date().toISOString()
+  });
+});
+
+// API Routes
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/intake', intakeRoutes);
+app.use('/api/v1/programme', programmeRoutes);
+app.use('/api/v1/partners', partnerRoutes);
+app.use('/api/v1/tracks', trackRoutes);
+app.use('/api/v1/certificates', certRoutes);
+app.use('/api/v1/audit', auditRoutes);
+
+// Error Handling Middleware
+app.use((err, req, res, next) => {
+  console.error('[Express Error]', err.stack);
+  res.status(500).json({ success: false, message: err.message || 'Internal Server Error' });
+});
+
+app.listen(PORT, () => {
+  console.log(`[Synapse LMS Express Backend] Server running on http://localhost:${PORT}`);
+});
