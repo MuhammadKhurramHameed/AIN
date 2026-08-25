@@ -93,6 +93,11 @@ export const AppProvider = ({ children }) => {
   const [auditLogs, setAuditLogs] = useState(INITIAL_DATA.audit_logs);
   const [certificates, setCertificates] = useState(INITIAL_DATA.certificates);
   const [assessment] = useState(INITIAL_DATA.assessment);
+
+  const [trainers, setTrainers] = useState([
+    { id: "tr-1", fullName: "Dr. Zeeshan Haider", email: "zeeshan.haider@nust.edu.pk", cnic: "35202-3344556-4", consortiumPartner: "National University of Sciences & Technology (NUST)", specialization: "Applied MLOps & Computer Vision", assignedCohorts: ["NUST-MLOps-Batch-04"], status: "ACTIVE" },
+    { id: "tr-2", fullName: "Engr. Saad Farooq", email: "saad.farooq@nu.edu.pk", cnic: "37405-9988776-5", consortiumPartner: "FAST National University", specialization: "LLM Fine-Tuning & Prompt Engineering", assignedCohorts: ["FAST-LLM-Batch-02"], status: "ACTIVE" }
+  ]);
   
   const [traineeHours, setTraineeHours] = useState(21.5);
   const [heartbeatPing, setHeartbeatPing] = useState(118);
@@ -107,7 +112,6 @@ export const AppProvider = ({ children }) => {
       const health = await apiService.getHealth();
       if (health && health.status === 'HEALTHY') {
         setIsBackendConnected(true);
-        console.log('[AppContext] Connected to Express + MongoDB backend server!');
 
         const progRes = await apiService.getProgrammeSummary();
         if (progRes && progRes.success) {
@@ -132,6 +136,21 @@ export const AppProvider = ({ children }) => {
             enrolled: p.enrolled,
             active_cohorts: p.activeCohorts,
             status: p.status
+          })));
+        }
+
+        const trainerRes = await apiService.getTrainers();
+        if (trainerRes && trainerRes.success && trainerRes.data.length > 0) {
+          setTrainers(trainerRes.data.map(t => ({
+            id: t._id,
+            fullName: t.fullName,
+            email: t.email,
+            phone: t.phone,
+            cnic: t.cnic,
+            consortiumPartner: t.consortiumPartner,
+            specialization: t.specialization,
+            assignedCohorts: t.assignedCohorts,
+            status: t.status
           })));
         }
 
@@ -174,9 +193,8 @@ export const AppProvider = ({ children }) => {
     return () => clearInterval(timer);
   }, []);
 
-  // Register New Trainee Intake (Syncs with Express API + State)
+  // Register Single Trainee
   const registerTrainee = async (formData) => {
-    // Call backend API
     const res = await apiService.registerTrainee(formData);
     
     setProgramme(prev => {
@@ -189,7 +207,6 @@ export const AppProvider = ({ children }) => {
       };
     });
 
-    // Add Audit Log
     const newLog = {
       id: res && res.success ? res.user.id : `log-${Math.floor(Math.random() * 90000 + 10000)}`,
       timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
@@ -202,7 +219,50 @@ export const AppProvider = ({ children }) => {
     setAuditLogs(prev => [newLog, ...prev]);
   };
 
-  // Add Consortium Partner (Syncs with Express API + State)
+  // Bulk Register Trainees (Consortium / Admin)
+  const bulkRegisterTrainees = async (traineesList, partnerName) => {
+    const res = await apiService.bulkRegisterTrainees(traineesList, partnerName);
+    
+    let addedCount = res && res.success ? res.addedCount : traineesList.length;
+    let femaleAdded = res && res.success ? res.femaleAddedCount : traineesList.filter(t => t.gender === 'FEMALE').length;
+
+    setProgramme(prev => ({
+      ...prev,
+      registered_count: prev.registered_count + addedCount,
+      female_registered_count: prev.female_registered_count + femaleAdded
+    }));
+
+    const newLog = {
+      id: `log-${Math.floor(Math.random() * 90000 + 10000)}`,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+      actor: `${partnerName || 'Consortium Admin'} (Bulk Engine)`,
+      action: "BULK_TRAINEE_INTAKE_SUCCESS",
+      entity: `Batch of ${addedCount} Trainees (${femaleAdded} Female)`,
+      ip: "127.0.0.1",
+      payload: { total_added: addedCount, female_added: femaleAdded, partner: partnerName }
+    };
+    setAuditLogs(prev => [newLog, ...prev]);
+  };
+
+  // Add Trainer (Admin or Consortium)
+  const addTrainer = async (trainerData) => {
+    const res = await apiService.addTrainer(trainerData);
+
+    const newTrainer = {
+      id: res && res.success ? res.data._id : `tr-${trainers.length + 1}`,
+      fullName: trainerData.fullName,
+      email: trainerData.email,
+      phone: trainerData.phone || "+92 300 1122334",
+      cnic: trainerData.cnic || "35201-9988776-9",
+      consortiumPartner: trainerData.consortiumPartner || "National University of Sciences & Technology (NUST)",
+      specialization: trainerData.specialization || "Applied MLOps & Computer Vision",
+      assignedCohorts: ["NUST-MLOps-Batch-05"],
+      status: "ACTIVE"
+    };
+    setTrainers(prev => [...prev, newTrainer]);
+  };
+
+  // Add Consortium Partner
   const addPartner = async (partnerData) => {
     const res = await apiService.addPartner(partnerData);
 
@@ -228,6 +288,7 @@ export const AppProvider = ({ children }) => {
       programme,
       tracks,
       partners,
+      trainers,
       provincialStats,
       auditLogs,
       certificates,
@@ -242,6 +303,8 @@ export const AppProvider = ({ children }) => {
       switchRole,
       navigateTo,
       registerTrainee,
+      bulkRegisterTrainees,
+      addTrainer,
       addPartner,
       setActiveModal,
       setModalData

@@ -23,7 +23,7 @@ export const apiService = {
     }
   },
 
-  // Public Intake Registration
+  // Public Trainee Registration
   async registerTrainee(formData) {
     try {
       const res = await fetch(`${API_BASE_URL}/intake/register`, {
@@ -34,6 +34,46 @@ export const apiService = {
       return await res.json();
     } catch (err) {
       console.warn('[API Service] registerTrainee error:', err.message);
+      return null;
+    }
+  },
+
+  // Bulk Trainee Registration
+  async bulkRegisterTrainees(trainees, consortiumPartner) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/intake/bulk-register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ trainees, consortiumPartner })
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] bulkRegisterTrainees error:', err.message);
+      return null;
+    }
+  },
+
+  // Trainers Management
+  async getTrainers() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/trainers`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] getTrainers error:', err.message);
+      return null;
+    }
+  },
+
+  async addTrainer(trainerData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/trainers`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(trainerData)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] addTrainer error:', err.message);
       return null;
     }
   },

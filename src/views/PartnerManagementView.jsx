@@ -1,40 +1,96 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { Plus, X } from 'lucide-react';
+import { Plus, UserPlus, Upload, X } from 'lucide-react';
 
 export const PartnerManagementView = () => {
-  const { partners, addPartner } = useApp();
-  const [showModal, setShowModal] = useState(false);
-  const [formData, setFormData] = useState({
+  const { partners, addPartner, trainers, addTrainer, bulkRegisterTrainees } = useApp();
+  const [showPartnerModal, setShowPartnerModal] = useState(false);
+  const [showTrainerModal, setShowTrainerModal] = useState(false);
+  const [showBulkModal, setShowBulkModal] = useState(false);
+
+  // Partner Form
+  const [partnerForm, setPartnerForm] = useState({
     name: '',
     email: '',
     mou_ref: '',
     allocated_capacity: 2000
   });
 
-  const handleAddSubmit = (e) => {
+  // Trainer Form
+  const [trainerForm, setTrainerForm] = useState({
+    fullName: '',
+    email: '',
+    phone: '',
+    cnic: '',
+    consortiumPartner: 'National University of Sciences & Technology (NUST)',
+    specialization: 'Applied MLOps & Computer Vision'
+  });
+
+  // Bulk Trainees Form
+  const [bulkText, setBulkText] = useState(`[
+  { "fullName": "Tariq Mahmood", "gender": "MALE", "province": "Balochistan", "district": "Quetta" },
+  { "fullName": "Bushra Bibi", "gender": "FEMALE", "province": "Punjab", "district": "Multan" }
+]`);
+
+  const handleAddPartner = (e) => {
     e.preventDefault();
-    if (!formData.name || !formData.email) {
+    if (!partnerForm.name || !partnerForm.email) {
       alert("Please fill in partner name and official email.");
       return;
     }
-    addPartner(formData);
-    setShowModal(false);
-    setFormData({ name: '', email: '', mou_ref: '', allocated_capacity: 2000 });
-    alert(`Consortium Partner "${formData.name}" successfully registered!`);
+    addPartner(partnerForm);
+    setShowPartnerModal(false);
+    setPartnerForm({ name: '', email: '', mou_ref: '', allocated_capacity: 2000 });
+    alert(`Consortium Partner "${partnerForm.name}" successfully registered!`);
+  };
+
+  const handleAddTrainer = (e) => {
+    e.preventDefault();
+    if (!trainerForm.fullName || !trainerForm.email) {
+      alert("Please fill in trainer name and official email.");
+      return;
+    }
+    addTrainer(trainerForm);
+    setShowTrainerModal(false);
+    setTrainerForm({ fullName: '', email: '', phone: '', cnic: '', consortiumPartner: 'National University of Sciences & Technology (NUST)', specialization: 'Applied MLOps & Computer Vision' });
+    alert(`Trainer "${trainerForm.fullName}" successfully registered by Super Admin!`);
+  };
+
+  const handleBulkUpload = (e) => {
+    e.preventDefault();
+    try {
+      const parsed = JSON.parse(bulkText);
+      if (!Array.isArray(parsed) || parsed.length === 0) {
+        alert("Please provide a valid non-empty JSON array of trainees.");
+        return;
+      }
+      bulkRegisterTrainees(parsed, "Ministry Oversight Batch Import");
+      setShowBulkModal(false);
+      alert(`Bulk Registration Completed!\n\n${parsed.length} Trainees successfully imported into national database and quota metrics updated.`);
+    } catch (err) {
+      alert("Invalid JSON format.");
+    }
   };
 
   return (
     <div className="page-view">
-      <div className="card">
+      <div className="card" style={{ marginBottom: "24px" }}>
         <div className="card-header">
           <div>
             <h3 className="card-title">Consortium Partner Organizations</h3>
-            <p className="card-subtitle">Managing institutional capacity allocations and MOU references</p>
+            <p className="card-subtitle">Managing institutional capacity allocations, MOU references, and trainer credentials</p>
           </div>
-          <button className="btn btn-primary" onClick={() => setShowModal(true)}>
-            <Plus size={16} /> Add New Consortium Partner
-          </button>
+          <div style={{ display: "flex", gap: "10px" }}>
+            <button className="btn btn-secondary btn-sm" onClick={() => setShowTrainerModal(true)}>
+              <UserPlus size={14} /> Add Trainer
+            </button>
+            <button className="btn btn-secondary btn-sm" onClick={() => setShowBulkModal(true)}>
+              <Upload size={14} /> Bulk Add Trainees
+            </button>
+            <button className="btn btn-primary btn-sm" onClick={() => setShowPartnerModal(true)}>
+              <Plus size={14} /> Add Consortium Partner
+            </button>
+          </div>
         </div>
 
         <div className="table-container">
@@ -73,14 +129,54 @@ export const PartnerManagementView = () => {
         </div>
       </div>
 
-      {showModal && (
+      {/* Trainers Table */}
+      <div className="card">
+        <div className="card-header">
+          <div>
+            <h4 className="card-title">National Trainers Index</h4>
+            <p className="card-subtitle">Authorized trainers across all consortium partner universities</p>
+          </div>
+          <button className="btn btn-primary btn-sm" onClick={() => setShowTrainerModal(true)}>
+            <UserPlus size={14} /> Add Trainer
+          </button>
+        </div>
+        <div className="table-container">
+          <table className="data-table">
+            <thead>
+              <tr>
+                <th>Trainer Name</th>
+                <th>Consortium Institution</th>
+                <th>Official Email</th>
+                <th>CNIC</th>
+                <th>Specialization</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trainers.map((t, idx) => (
+                <tr key={idx}>
+                  <td><strong>{t.fullName}</strong></td>
+                  <td>{t.consortiumPartner}</td>
+                  <td>{t.email}</td>
+                  <td style={{ fontFamily: "var(--font-mono)", fontSize: "11.5px" }}>{t.cnic}</td>
+                  <td><span className="badge badge-neutral">{t.specialization}</span></td>
+                  <td><span className="badge badge-success">{t.status}</span></td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      {/* Add Partner Modal */}
+      {showPartnerModal && (
         <div className="modal-backdrop">
           <div className="modal-card">
             <div className="modal-header">
               <h4 className="card-title">Add Consortium Partner Organization</h4>
-              <button className="btn btn-ghost btn-sm" onClick={() => setShowModal(false)}><X size={16} /></button>
+              <button className="btn btn-ghost btn-sm" onClick={() => setShowPartnerModal(false)}><X size={16} /></button>
             </div>
-            <form onSubmit={handleAddSubmit}>
+            <form onSubmit={handleAddPartner}>
               <div className="modal-body">
                 <div className="form-group">
                   <label className="form-label">Partner Organization Name *</label>
@@ -89,8 +185,8 @@ export const PartnerManagementView = () => {
                     className="form-control"
                     placeholder="e.g. Lahore University of Management Sciences"
                     required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                    value={partnerForm.name}
+                    onChange={(e) => setPartnerForm({ ...partnerForm, name: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
@@ -100,8 +196,8 @@ export const PartnerManagementView = () => {
                     className="form-control"
                     placeholder="lms@partner.edu.pk"
                     required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    value={partnerForm.email}
+                    onChange={(e) => setPartnerForm({ ...partnerForm, email: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
@@ -110,8 +206,8 @@ export const PartnerManagementView = () => {
                     type="text"
                     className="form-control"
                     placeholder="MOU-MoITT-2026-006"
-                    value={formData.mou_ref}
-                    onChange={(e) => setFormData({ ...formData, mou_ref: e.target.value })}
+                    value={partnerForm.mou_ref}
+                    onChange={(e) => setPartnerForm({ ...partnerForm, mou_ref: e.target.value })}
                   />
                 </div>
                 <div className="form-group">
@@ -119,14 +215,129 @@ export const PartnerManagementView = () => {
                   <input
                     type="number"
                     className="form-control"
-                    value={formData.allocated_capacity}
-                    onChange={(e) => setFormData({ ...formData, allocated_capacity: e.target.value })}
+                    value={partnerForm.allocated_capacity}
+                    onChange={(e) => setPartnerForm({ ...partnerForm, allocated_capacity: e.target.value })}
                   />
                 </div>
               </div>
               <div className="modal-footer">
-                <button type="button" className="btn btn-secondary" onClick={() => setShowModal(false)}>Cancel</button>
+                <button type="button" className="btn btn-secondary" onClick={() => setShowPartnerModal(false)}>Cancel</button>
                 <button type="submit" className="btn btn-primary">Create Partner Record</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Add Trainer Modal */}
+      {showTrainerModal && (
+        <div className="modal-backdrop">
+          <div className="modal-card">
+            <div className="modal-header">
+              <h4 className="card-title">Add Authorized Trainer</h4>
+              <button className="btn btn-ghost btn-sm" onClick={() => setShowTrainerModal(false)}><X size={16} /></button>
+            </div>
+            <form onSubmit={handleAddTrainer}>
+              <div className="modal-body">
+                <div className="form-group">
+                  <label className="form-label">Full Name *</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Dr. Asadullah Khan"
+                    required
+                    value={trainerForm.fullName}
+                    onChange={(e) => setTrainerForm({ ...trainerForm, fullName: e.target.value })}
+                  />
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Official Email *</label>
+                  <input
+                    type="email"
+                    className="form-control"
+                    placeholder="trainer@institution.edu.pk"
+                    required
+                    value={trainerForm.email}
+                    onChange={(e) => setTrainerForm({ ...trainerForm, email: e.target.value })}
+                  />
+                </div>
+                <div className="grid-2">
+                  <div className="form-group">
+                    <label className="form-label">CNIC Number *</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="35201-9988776-9"
+                      required
+                      value={trainerForm.cnic}
+                      onChange={(e) => setTrainerForm({ ...trainerForm, cnic: e.target.value })}
+                    />
+                  </div>
+                  <div className="form-group">
+                    <label className="form-label">Consortium Institution *</label>
+                    <select
+                      className="form-control form-select"
+                      value={trainerForm.consortiumPartner}
+                      onChange={(e) => setTrainerForm({ ...trainerForm, consortiumPartner: e.target.value })}
+                    >
+                      {partners.map(p => (
+                        <option key={p.id} value={p.name}>{p.name}</option>
+                      ))}
+                    </select>
+                  </div>
+                </div>
+                <div className="form-group">
+                  <label className="form-label">Specialization / Domain *</label>
+                  <select
+                    className="form-control form-select"
+                    value={trainerForm.specialization}
+                    onChange={(e) => setTrainerForm({ ...trainerForm, specialization: e.target.value })}
+                  >
+                    <option value="Applied MLOps & Computer Vision">Applied MLOps & Computer Vision</option>
+                    <option value="LLM Fine-Tuning & Prompt Engineering">LLM Fine-Tuning & Prompt Engineering</option>
+                    <option value="AI Governance & Policy">AI Governance & Policy</option>
+                    <option value="NLP & Generative Media">NLP & Generative Media</option>
+                  </select>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowTrainerModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary">Register Trainer</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* Bulk Add Trainees Modal */}
+      {showBulkModal && (
+        <div className="modal-backdrop">
+          <div className="modal-card" style={{ maxWidth: "680px" }}>
+            <div className="modal-header">
+              <h4 className="card-title">Bulk Trainee Import (National Oversight)</h4>
+              <button className="btn btn-ghost btn-sm" onClick={() => setShowBulkModal(false)}><X size={16} /></button>
+            </div>
+            <form onSubmit={handleBulkUpload}>
+              <div className="modal-body">
+                <p style={{ fontSize: "12.5px", color: "var(--text-subtle)", marginBottom: "12px" }}>
+                  Paste batch trainee payload to register trainees directly into the database.
+                </p>
+                <div className="form-group">
+                  <label className="form-label">JSON Trainee Payload *</label>
+                  <textarea
+                    className="form-control"
+                    rows="8"
+                    style={{ fontFamily: "var(--font-mono)", fontSize: "12px" }}
+                    value={bulkText}
+                    onChange={(e) => setBulkText(e.target.value)}
+                  ></textarea>
+                </div>
+              </div>
+              <div className="modal-footer">
+                <button type="button" className="btn btn-secondary" onClick={() => setShowBulkModal(false)}>Cancel</button>
+                <button type="submit" className="btn btn-primary">
+                  <Upload size={16} /> Register Batch Trainees
+                </button>
               </div>
             </form>
           </div>

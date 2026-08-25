@@ -11,6 +11,7 @@ import partnerRoutes from './routes/partnerRoutes.js';
 import trackRoutes from './routes/trackRoutes.js';
 import certRoutes from './routes/certRoutes.js';
 import auditRoutes from './routes/auditRoutes.js';
+import trainerRoutes from './routes/trainerRoutes.js';
 
 dotenv.config();
 
@@ -43,6 +44,7 @@ app.use('/api/v1/partners', partnerRoutes);
 app.use('/api/v1/tracks', trackRoutes);
 app.use('/api/v1/certificates', certRoutes);
 app.use('/api/v1/audit', auditRoutes);
+app.use('/api/v1/trainers', trainerRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
