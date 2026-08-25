@@ -19,8 +19,6 @@ export const DemoRoleBar = () => {
       <div className="brand-badge">
         <Sliders size={15} />
         <span>SYNAPSE LMS CONTROL PLANE</span>
-        <span style={{ opacity: 0.5, margin: "0 4px" }}>|</span>
-        <span style={{ color: "#94a3b8", fontWeight: 500 }}>SaaS Gateway</span>
       </div>
 
       <div className="role-selector-group">

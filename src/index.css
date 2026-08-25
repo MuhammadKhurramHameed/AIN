@@ -81,7 +81,8 @@ body {
   padding: 8px 24px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 20px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.1);
   font-size: 12px;
   position: sticky;
@@ -98,6 +99,7 @@ body {
   font-weight: 700;
   color: #60a5fa;
   letter-spacing: 0.5px;
+  flex-shrink: 0;
 }
 
 .role-selector-group {
