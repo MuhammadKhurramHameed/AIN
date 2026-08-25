@@ -24,7 +24,16 @@ import { IntegrationsView } from './views/IntegrationsView';
 import { UserManagementView } from './views/UserManagementView';
 import { SecurityView } from './views/SecurityView';
 
+import { LandingPageView } from './views/LandingPageView';
+import { SignInView } from './views/SignInView';
+import { TwoFactorVerifyView } from './views/TwoFactorVerifyView';
+import { OnboardingWalkthroughView } from './views/OnboardingWalkthroughView';
+
 const VIEW_MAP = {
+  "landing-page": LandingPageView,
+  "sign-in": SignInView,
+  "2fa-verify": TwoFactorVerifyView,
+  "onboarding": OnboardingWalkthroughView,
   "public-intake": PublicIntakeView,
   "authenticator": AuthenticatorView,
   "admin-oversight": OversightDashboardView,
@@ -47,16 +56,26 @@ const VIEW_MAP = {
 };
 
 export const AppContent = () => {
-  const { currentView } = useApp();
-  const ActiveViewComponent = VIEW_MAP[currentView] || OversightDashboardView;
+  const { currentView, isAuthenticated, showDemoBar } = useApp();
+  const ActiveViewComponent = VIEW_MAP[currentView] || LandingPageView;
+
+  const publicViews = ["landing-page", "sign-in", "2fa-verify", "public-intake", "authenticator"];
+  const isPublicPage = publicViews.includes(currentView) || !isAuthenticated;
 
   return (
-    <div className="app-wrapper">
-      <DemoRoleBar />
+    <div className={`app-wrapper ${showDemoBar ? "has-demo-bar" : ""}`}>
+      {showDemoBar && <DemoRoleBar />}
       <div className="app-layout">
-        <Sidebar />
-        <main className="app-main">
-          <Header />
+        {!isPublicPage && <Sidebar />}
+        <main
+          className="app-main"
+          style={{
+            marginLeft: isPublicPage ? 0 : undefined,
+            width: isPublicPage ? "100%" : undefined,
+            padding: isPublicPage ? 0 : undefined
+          }}
+        >
+          {!isPublicPage && <Header />}
           <ActiveViewComponent />
         </main>
       </div>

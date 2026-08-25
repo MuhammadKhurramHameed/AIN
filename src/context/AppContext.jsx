@@ -60,33 +60,33 @@ export const ROLE_CONFIGS = {
     label: "Trainer",
     code: "TRAINER",
     defaultView: "trainer-hub",
-    title: "Trainer Hub & Live Operations",
-    subtitle: "Cohort NUST-MLOps-Batch-04 Management",
+    title: "Trainer Operations Hub",
+    subtitle: "Cohort Delivery, Attendance & Evaluation Workspace",
     menu: [
-      { id: "trainer-hub", label: "Live Classroom", icon: "Users" },
-      { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
-      { id: "trainer-grading", label: "Grading Workspace", icon: "CheckSquare" },
-      { id: "trainee-classroom", label: "Webinar View", icon: "Video" }
+      { id: "trainer-hub", label: "Trainer Dashboard", icon: "Users" },
+      { id: "trainee-classroom", label: "Live Classroom", icon: "Video" },
+      { id: "trainer-grading", label: "Grading & Feedback", icon: "FileText" },
+      { id: "question-bank", label: "Question Authoring", icon: "BookOpen" },
+      { id: "authenticator", label: "Credential Lookup", icon: "QrCode" }
     ]
   },
   CONTENT_REVIEWER: {
     label: "Content Reviewer",
     code: "CONTENT_REVIEWER",
-    defaultView: "curriculum-builder",
-    title: "Curriculum Quality & Pedagogy",
-    subtitle: "Auditing Level 1, Level 2, and Level 3 Taxonomies",
+    defaultView: "curriculum-kanban",
+    title: "Curriculum Quality Assurance",
+    subtitle: "Pedagogical Standards & Coursework Validation",
     menu: [
-      { id: "curriculum-kanban", label: "Curriculum Kanban", icon: "Kanban" },
-      { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
-      { id: "curriculum-builder", label: "Track Architecture", icon: "Layers" },
-      { id: "admin-audit", label: "Curriculum Logs", icon: "ShieldCheck" }
+      { id: "curriculum-kanban", label: "Curriculum Review", icon: "Kanban" },
+      { id: "question-bank", label: "Item Bank Quality", icon: "BookOpen" },
+      { id: "curriculum-builder", label: "Track Standards", icon: "Layers" }
     ]
   },
   TRAINEE: {
     label: "Trainee Student",
     code: "TRAINEE",
     defaultView: "trainee-dashboard",
-    title: "Trainee Student Portal",
+    title: "Trainee Learning Portal",
     subtitle: "Track 1: Students & Fresh Graduates (Applied ML)",
     menu: [
       { id: "trainee-dashboard", label: "My Dashboard", icon: "LayoutDashboard" },
@@ -100,7 +100,11 @@ export const ROLE_CONFIGS = {
 
 export const AppProvider = ({ children }) => {
   const [currentRole, setCurrentRole] = useState("SUPER_ADMIN");
-  const [currentView, setCurrentView] = useState("admin-oversight");
+  const [currentView, setCurrentView] = useState("landing-page");
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [authUser, setAuthUser] = useState(null);
+  const [showDemoBar, setShowDemoBar] = useState(false);
+
   const [programme, setProgramme] = useState(INITIAL_DATA.programme);
   const [tracks, setTracks] = useState(INITIAL_DATA.tracks);
   const [partners, setPartners] = useState(INITIAL_DATA.consortium_partners);
@@ -120,6 +124,7 @@ export const AppProvider = ({ children }) => {
   const [modalData, setModalData] = useState(null);
   const [capstoneScore, setCapstoneScore] = useState(92.5);
   const [isBackendConnected, setIsBackendConnected] = useState(false);
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
   // Initial Fetch from Backend Server
   useEffect(() => {
@@ -160,7 +165,6 @@ export const AppProvider = ({ children }) => {
             id: t._id,
             fullName: t.fullName,
             email: t.email,
-            phone: t.phone,
             cnic: t.cnic,
             consortiumPartner: t.consortiumPartner,
             specialization: t.specialization,
@@ -168,36 +172,60 @@ export const AppProvider = ({ children }) => {
             status: t.status
           })));
         }
-
-        const logRes = await apiService.getAuditLogs();
-        if (logRes && logRes.success && logRes.data.length > 0) {
-          setAuditLogs(logRes.data.map(l => ({
-            id: l._id,
-            timestamp: l.timestamp,
-            actor: l.actor,
-            action: l.action,
-            entity: l.entity,
-            ip: l.ip,
-            payload: l.payload
-          })));
-        }
       }
     }
     loadBackendData();
   }, []);
 
-  // Switch Role
   const switchRole = (roleCode) => {
-    if (!ROLE_CONFIGS[roleCode]) return;
-    setCurrentRole(roleCode);
-    setCurrentView(ROLE_CONFIGS[roleCode].defaultView);
+    if (ROLE_CONFIGS[roleCode]) {
+      setCurrentRole(roleCode);
+      const config = ROLE_CONFIGS[roleCode];
+      if (isAuthenticated) {
+        setCurrentView(config.defaultView);
+      }
+    }
   };
 
-  // Navigate To View
-  const navigateTo = (viewId) => {
-    setCurrentView(viewId);
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+  const login = (roleCode = currentRole) => {
+    setIsAuthenticated(true);
+    setCurrentRole(roleCode);
+    setAuthUser({
+      name: INITIAL_DATA.roles[roleCode]?.name || "Authenticated User",
+      role: roleCode,
+      email: INITIAL_DATA.roles[roleCode]?.email || "user@ain.gov.pk"
+    });
+    const config = ROLE_CONFIGS[roleCode] || ROLE_CONFIGS.SUPER_ADMIN;
+    setCurrentView(config.defaultView);
   };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setAuthUser(null);
+    setCurrentView("landing-page");
+  };
+
+  const navigateTo = (viewId) => {
+    const publicViews = ["landing-page", "sign-in", "2fa-verify", "public-intake", "authenticator"];
+    if (publicViews.includes(viewId)) {
+      setCurrentView(viewId);
+      return;
+    }
+    if (!isAuthenticated) {
+      setCurrentView("sign-in");
+      return;
+    }
+    const config = ROLE_CONFIGS[currentRole];
+    const isAllowed = config.menu.some(m => m.id === viewId) || publicViews.includes(viewId);
+    if (isAllowed) {
+      setCurrentView(viewId);
+    } else {
+      setCurrentView(config.defaultView);
+    }
+  };
+
+  const toggleSidebar = () => setIsSidebarCollapsed(prev => !prev);
+  const toggleDemoBar = () => setShowDemoBar(prev => !prev);
 
   // Live Telemetry Simulation
   useEffect(() => {
@@ -234,7 +262,7 @@ export const AppProvider = ({ children }) => {
     setAuditLogs(prev => [newLog, ...prev]);
   };
 
-  // Bulk Register Trainees (Consortium / Admin)
+  // Bulk Register Trainees
   const bulkRegisterTrainees = async (traineesList, partnerName) => {
     const res = await apiService.bulkRegisterTrainees(traineesList, partnerName);
     
@@ -259,7 +287,7 @@ export const AppProvider = ({ children }) => {
     setAuditLogs(prev => [newLog, ...prev]);
   };
 
-  // Add Trainer (Admin or Consortium)
+  // Add Trainer
   const addTrainer = async (trainerData) => {
     const res = await apiService.addTrainer(trainerData);
 
@@ -294,15 +322,18 @@ export const AppProvider = ({ children }) => {
     setPartners(prev => [...prev, newPartner]);
   };
 
-  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
-  const toggleSidebar = () => setIsSidebarCollapsed(prev => !prev);
-
   return (
     <AppContext.Provider value={{
       currentRole,
       currentView,
-      currentUser: INITIAL_DATA.roles[currentRole],
+      currentUser: authUser || INITIAL_DATA.roles[currentRole],
       roleConfig: ROLE_CONFIGS[currentRole],
+      isAuthenticated,
+      authUser,
+      showDemoBar,
+      login,
+      logout,
+      toggleDemoBar,
       programme,
       tracks,
       partners,

@@ -1,9 +1,9 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { Shield, Verified, Building2, Users, BookOpen, GraduationCap, UserPlus, QrCode, Sliders } from 'lucide-react';
+import { Shield, Verified, Building2, Users, BookOpen, GraduationCap, UserPlus, QrCode, Sliders, Globe, LogIn, LogOut, User } from 'lucide-react';
 
 export const DemoRoleBar = () => {
-  const { currentRole, switchRole, heartbeatPing, navigateTo } = useApp();
+  const { currentRole, switchRole, navigateTo } = useApp();
 
   const roleChips = [
     { code: "SUPER_ADMIN", label: "Super Admin", icon: Shield },
@@ -18,10 +18,19 @@ export const DemoRoleBar = () => {
     <div className="demo-role-bar">
       <div className="brand-badge">
         <Sliders size={15} />
-        <span>SYNAPSE LMS CONTROL PLANE</span>
+        <span>DEMO PERSONA SWITCHER</span>
       </div>
 
       <div className="role-selector-group">
+        <button
+          className="role-chip"
+          style={{ borderColor: "#a7f3d0", color: "#6ee7b7" }}
+          onClick={() => navigateTo("landing-page")}
+        >
+          <Globe size={13} />
+          <span>Landing Page</span>
+        </button>
+
         {roleChips.map(chip => {
           const Icon = chip.icon;
           return (
@@ -35,31 +44,13 @@ export const DemoRoleBar = () => {
             </button>
           );
         })}
-        
-        <button
-          className="role-chip"
-          style={{ borderColor: "#60a5fa", color: "#60a5fa" }}
-          onClick={() => navigateTo("public-intake")}
-        >
-          <UserPlus size={13} />
-          <span>Public Intake</span>
-        </button>
-        
-        <button
-          className="role-chip"
-          style={{ borderColor: "#34d399", color: "#34d399" }}
-          onClick={() => navigateTo("authenticator")}
-        >
-          <QrCode size={13} />
-          <span>Authenticator</span>
-        </button>
       </div>
     </div>
   );
 };
 
 export const Header = () => {
-  const { roleConfig, navigateTo } = useApp();
+  const { roleConfig, currentUser, logout, toggleDemoBar, showDemoBar } = useApp();
 
   return (
     <header className="app-header">
@@ -68,12 +59,33 @@ export const Header = () => {
         <p>{roleConfig.subtitle}</p>
       </div>
 
-      <div className="header-actions">
-        <button className="btn btn-secondary btn-sm" onClick={() => navigateTo("authenticator")}>
-          <QrCode size={14} /> Verify Certificate
+      <div className="header-actions" style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+        {/* Logged In User Pill */}
+        <div style={{ display: "flex", alignItems: "center", gap: "8px", background: "var(--surface-dim)", padding: "4px 12px", borderRadius: "9999px", border: "1px solid #e2e8f0" }}>
+          <div style={{ width: "24px", height: "24px", borderRadius: "50%", background: "#1d4ed8", color: "#ffffff", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "11px", fontWeight: 700 }}>
+            <User size={13} />
+          </div>
+          <span style={{ fontSize: "12.5px", fontWeight: 600, color: "#0f172a" }}>
+            {currentUser?.name || "Authenticated User"}
+          </span>
+          <span className="badge badge-primary" style={{ fontSize: "10px", padding: "2px 8px" }}>
+            {roleConfig.label}
+          </span>
+        </div>
+
+        {/* Demo Mode Toggle Button */}
+        <button
+          className="btn btn-ghost btn-sm"
+          style={{ color: showDemoBar ? "#1d4ed8" : "var(--text-subtle)", fontSize: "12px" }}
+          onClick={toggleDemoBar}
+          title="Toggle Demo Persona Bar"
+        >
+          <Sliders size={14} /> Demo Switcher
         </button>
-        <button className="btn btn-primary btn-sm" onClick={() => navigateTo("public-intake")}>
-          <UserPlus size={14} /> Register Trainee
+
+        {/* Sign Out Button */}
+        <button className="btn btn-secondary btn-sm" onClick={logout} style={{ color: "#dc2626", borderColor: "#fca5a5" }}>
+          <LogOut size={14} /> Sign Out
         </button>
       </div>
     </header>

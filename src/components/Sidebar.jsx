@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { LayoutDashboard, Building2, ShieldCheck, Layers, UserPlus, QrCode, Users, CheckSquare, Video, FileText, Award, Network, Cpu, Kanban, BookOpen, Lock, ChevronLeft, ChevronRight } from 'lucide-react';
+import { LayoutDashboard, Building2, ShieldCheck, Layers, UserPlus, QrCode, Users, CheckSquare, Video, FileText, Award, Network, Cpu, Kanban, BookOpen, Lock, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
 
 const ICON_MAP = {
   LayoutDashboard,
@@ -22,7 +22,7 @@ const ICON_MAP = {
 };
 
 export const Sidebar = () => {
-  const { roleConfig, currentView, navigateTo, currentUser, isSidebarCollapsed, toggleSidebar } = useApp();
+  const { roleConfig, currentView, navigateTo, currentUser, isSidebarCollapsed, toggleSidebar, logout } = useApp();
 
   return (
     <aside className={`app-sidebar ${isSidebarCollapsed ? "collapsed" : ""}`}>
@@ -79,16 +79,26 @@ export const Sidebar = () => {
         </ul>
       </nav>
 
-      <div className="sidebar-footer">
+      <div className="sidebar-footer" style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
         <div className="user-profile-card">
-          <div className="user-avatar">{currentUser.avatar_initials}</div>
+          <div className="user-avatar">{currentUser?.avatar_initials || "SA"}</div>
           {!isSidebarCollapsed && (
-            <div className="user-info">
-              <h4>{currentUser.name}</h4>
-              <p>{currentUser.email}</p>
+            <div className="user-info" style={{ flex: 1 }}>
+              <h4>{currentUser?.name || "Authenticated User"}</h4>
+              <p>{currentUser?.email || "user@ain.gov.pk"}</p>
             </div>
           )}
         </div>
+
+        <button
+          onClick={logout}
+          className="btn btn-ghost btn-sm"
+          style={{ width: "100%", justifyContent: isSidebarCollapsed ? "center" : "flex-start", color: "#dc2626", gap: "8px" }}
+          title={isSidebarCollapsed ? "Sign Out" : undefined}
+        >
+          <LogOut size={16} />
+          {!isSidebarCollapsed && <span>Sign Out Session</span>}
+        </button>
       </div>
     </aside>
   );
