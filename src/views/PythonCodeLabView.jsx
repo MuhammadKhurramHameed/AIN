@@ -1179,20 +1179,20 @@ sys.stderr = _sys_err
   const currentTemplate = STARTER_TEMPLATES.find(t => t.id === activeTemplateId) || STARTER_TEMPLATES[0];
 
   return (
-    <div className="page-view">
+    <div className="page-view" style={{ width: "100%", padding: "20px" }}>
       {/* Top Banner Card */}
-      <div className="card" style={{ marginBottom: "18px" }}>
-        <div className="card-header" style={{ flexWrap: "wrap", gap: "12px" }}>
+      <div className="card" style={{ marginBottom: "18px", padding: "18px 24px" }}>
+        <div className="card-header" style={{ flexWrap: "wrap", gap: "16px", marginBottom: "12px" }}>
           <div>
-            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <Code2 size={22} color="var(--primary)" /> In-Browser Python AI Code Lab & Sandbox
+            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: "20px", fontWeight: 800 }}>
+              <Code2 size={24} color="var(--primary)" /> In-Browser Python AI Code Lab &amp; Sandbox
             </h3>
-            <p className="card-subtitle">
-              Interactive WebAssembly-powered Python environment. Train machine learning models, inspect vector embeddings, execute convolution kernels, and get real-time assistance from the **Google Gemini AI Copilot**.
+            <p className="card-subtitle" style={{ marginTop: "4px", fontSize: "13px", color: "var(--text-subtle)" }}>
+              Interactive WebAssembly-powered Python execution environment. Train machine learning models, inspect vector embeddings, execute convolution kernels, and receive real-time guidance from <strong style={{ color: "#8b5cf6" }}>Google Gemini AI Copilot</strong>.
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
+          <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
             <button 
               className="btn btn-secondary btn-sm" 
               onClick={() => { setTempKey(geminiKey); setShowKeyModal(true); }}
@@ -1219,15 +1219,15 @@ sys.stderr = _sys_err
               className="btn btn-primary btn-sm" 
               onClick={executeCode} 
               disabled={isRunning}
-              style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 700 }}
+              style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: 700, padding: "8px 18px", background: "linear-gradient(135deg, #1d4ed8, #2563eb)", boxShadow: "0 0 12px rgba(29,78,216,0.3)" }}
             >
-              <Play size={14} fill="#fff" /> {isRunning ? "Executing..." : "Run Script (Ctrl+Enter)"}
+              <Play size={15} fill="#fff" /> {isRunning ? "Executing Engine..." : "Run Script (Ctrl+Enter)"}
             </button>
           </div>
         </div>
 
         {/* Template Selector Pills */}
-        <div style={{ display: "flex", gap: "8px", marginTop: "14px", overflowX: "auto", paddingBottom: "4px" }}>
+        <div style={{ display: "flex", gap: "8px", flexWrap: "wrap", borderTop: "1px solid var(--border-subtle)", paddingTop: "12px" }}>
           {STARTER_TEMPLATES.map(t => {
             const isSelected = t.id === activeTemplateId;
             return (
@@ -1235,7 +1235,7 @@ sys.stderr = _sys_err
                 key={t.id}
                 onClick={() => handleSelectTemplate(t)}
                 className={`btn btn-xs ${isSelected ? "btn-primary" : "btn-secondary"}`}
-                style={{ whiteSpace: "nowrap", fontSize: "11.5px" }}
+                style={{ whiteSpace: "nowrap", fontSize: "12px", padding: "6px 14px", borderRadius: "9999px" }}
               >
                 {t.title}
               </button>
@@ -1244,43 +1244,43 @@ sys.stderr = _sys_err
         </div>
       </div>
 
-      {/* Main IDE Workspace */}
-      <div className="grid-12" style={{ gap: "16px", alignItems: "stretch" }}>
+      {/* Main IDE Workspace (Equal 50% / 50% Full-Width Split) */}
+      <div style={{ display: "flex", gap: "18px", width: "100%", minHeight: "calc(100vh - 240px)", alignItems: "stretch" }}>
         
-        {/* Left Column: Interactive Code Editor */}
-        <div className="col-span-7">
-          <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", height: "640px" }}>
+        {/* Left Column: Interactive Code Editor (50% Width) */}
+        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%", minHeight: "650px", border: "1px solid #1e293b", boxShadow: "var(--shadow-md)" }}>
             {/* Editor Header Toolbar */}
             <div style={{ 
               background: "#0f172a", 
               color: "#94a3b8", 
-              padding: "10px 16px", 
+              padding: "12px 18px", 
               display: "flex", 
               justifyContent: "space-between", 
               alignItems: "center",
               borderBottom: "1px solid #1e293b",
-              fontSize: "12px"
+              fontSize: "13px"
             }}>
-              <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-                <FileCode size={16} color="#38bdf8" />
-                <span style={{ color: "#f8fafc", fontFamily: "var(--font-mono)", fontWeight: 700 }}>
+              <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
+                <FileCode size={18} color="#38bdf8" />
+                <span style={{ color: "#f8fafc", fontFamily: "var(--font-mono)", fontWeight: 700, fontSize: "13.5px" }}>
                   {activeTemplateId}_script.py
                 </span>
-                <span className="badge badge-primary" style={{ fontSize: "10px", padding: "1px 6px" }}>
+                <span className="badge badge-primary" style={{ fontSize: "10px", padding: "2px 8px" }}>
                   {currentTemplate.category}
                 </span>
               </div>
 
-              <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
-                <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", opacity: 0.8 }}>
+              <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+                <span style={{ fontFamily: "var(--font-mono)", fontSize: "11.5px", opacity: 0.85, color: "#94a3b8" }}>
                   {code.split('\n').length} lines
                 </span>
                 <button 
                   onClick={() => setCode(currentTemplate.code)}
-                  style={{ background: "transparent", border: "none", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "11px" }}
+                  style={{ background: "transparent", border: "none", color: "#94a3b8", cursor: "pointer", display: "flex", alignItems: "center", gap: "4px", fontSize: "12px" }}
                   title="Reset to starter template"
                 >
-                  <RotateCcw size={12} /> Reset
+                  <RotateCcw size={13} /> Reset Code
                 </button>
               </div>
             </div>
@@ -1289,16 +1289,17 @@ sys.stderr = _sys_err
             <div style={{ position: "relative", flex: 1, background: "#0b1120", display: "flex" }}>
               {/* Line Numbers Column */}
               <div style={{ 
-                width: "42px", 
+                width: "48px", 
                 background: "#080d1a", 
                 color: "#475569", 
                 fontFamily: "var(--font-mono)", 
-                fontSize: "12px", 
-                lineHeight: "20px", 
-                padding: "14px 6px", 
+                fontSize: "13px", 
+                lineHeight: "22px", 
+                padding: "16px 8px 16px 0", 
                 textAlign: "right",
                 userSelect: "none",
-                borderRight: "1px solid #1e293b"
+                borderRight: "1px solid #1e293b",
+                flexShrink: 0
               }}>
                 {code.split('\n').map((_, idx) => (
                   <div key={idx}>{idx + 1}</div>
@@ -1315,15 +1316,16 @@ sys.stderr = _sys_err
                   background: "transparent",
                   color: "#f1f5f9",
                   fontFamily: "var(--font-mono)",
-                  fontSize: "12.5px",
-                  lineHeight: "20px",
-                  padding: "14px 14px",
+                  fontSize: "13px",
+                  lineHeight: "22px",
+                  padding: "16px",
                   border: "none",
                   outline: "none",
                   resize: "none",
                   tabSize: 4,
                   whiteSpace: "pre",
-                  overflowY: "auto"
+                  overflowY: "auto",
+                  width: "100%"
                 }}
                 onKeyDown={(e) => {
                   if (e.key === 'Tab') {
@@ -1343,45 +1345,45 @@ sys.stderr = _sys_err
             <div style={{ 
               background: "#0f172a", 
               borderTop: "1px solid #1e293b", 
-              padding: "8px 14px", 
+              padding: "10px 18px", 
               display: "flex", 
               justifyContent: "space-between", 
               alignItems: "center" 
             }}>
-              <div style={{ display: "flex", gap: "6px" }}>
+              <div style={{ display: "flex", gap: "8px" }}>
                 <button 
                   className="btn btn-xs btn-secondary"
                   onClick={() => handleAiAssistant("explain")}
-                  style={{ background: "#1e293b", color: "#38bdf8", borderColor: "#334155", fontSize: "11px" }}
+                  style={{ background: "#1e293b", color: "#38bdf8", borderColor: "#334155", fontSize: "11.5px", padding: "4px 10px" }}
                 >
-                  <Sparkles size={12} /> ✨ AI Explain
+                  <Sparkles size={13} /> ✨ AI Explain
                 </button>
                 <button 
                   className="btn btn-xs btn-secondary"
                   onClick={() => handleAiAssistant("debug")}
-                  style={{ background: "#1e293b", color: "#f43f5e", borderColor: "#334155", fontSize: "11px" }}
+                  style={{ background: "#1e293b", color: "#f43f5e", borderColor: "#334155", fontSize: "11.5px", padding: "4px 10px" }}
                 >
-                  <Bug size={12} /> 🐛 AI Debug
+                  <Bug size={13} /> 🐛 AI Debug
                 </button>
                 <button 
                   className="btn btn-xs btn-secondary"
                   onClick={() => handleAiAssistant("optimize")}
-                  style={{ background: "#1e293b", color: "#34d399", borderColor: "#334155", fontSize: "11px" }}
+                  style={{ background: "#1e293b", color: "#34d399", borderColor: "#334155", fontSize: "11.5px", padding: "4px 10px" }}
                 >
-                  <Zap size={12} /> 🚀 AI Optimize
+                  <Zap size={13} /> 🚀 AI Optimize
                 </button>
               </div>
 
-              <div style={{ fontSize: "11px", color: "#64748b", fontFamily: "var(--font-mono)" }}>
-                ⚡ Press <kbd style={{ background: "#1e293b", padding: "1px 4px", borderRadius: "3px", color: "#cbd5e1" }}>Ctrl+Enter</kbd> to execute
+              <div style={{ fontSize: "11.5px", color: "#64748b", fontFamily: "var(--font-mono)" }}>
+                ⚡ Press <kbd style={{ background: "#1e293b", padding: "2px 6px", borderRadius: "4px", color: "#cbd5e1" }}>Ctrl+Enter</kbd> to execute
               </div>
             </div>
           </div>
         </div>
 
-        {/* Right Column: Terminal Output & Visualizer & AI Copilot */}
-        <div className="col-span-5">
-          <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", height: "640px" }}>
+        {/* Right Column: Terminal Output & Visualizer & AI Copilot (50% Width) */}
+        <div style={{ flex: 1, minWidth: 0, display: "flex", flexDirection: "column" }}>
+          <div className="card" style={{ padding: 0, overflow: "hidden", display: "flex", flexDirection: "column", height: "100%", minHeight: "650px", border: "1px solid var(--border-subtle)", boxShadow: "var(--shadow-md)" }}>
             
             {/* Output Tabs Header */}
             <div style={{ 
