@@ -55,12 +55,6 @@ export const DemoRoleBar = () => {
           <QrCode size={13} />
           <span>Authenticator</span>
         </button>
-      </div>
-
-      <div className="live-telemetry-pill">
-        <span className="pulse-dot"></span>
-        <span>WebSocket Ping #{heartbeatPing}</span>
-      </div>
     </div>
   );
 };

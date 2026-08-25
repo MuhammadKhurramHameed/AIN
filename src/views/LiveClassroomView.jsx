@@ -36,7 +36,7 @@ export const LiveClassroomView = () => {
             </div>
 
             <div className="video-overlay-telemetry">
-              <div>WebSocket Telemetry: <strong style={{ color: "#4ade80" }}>Active (Ping #{heartbeatPing})</strong></div>
+              <div>Session Telemetry: <strong style={{ color: "#4ade80" }}>Active</strong></div>
               <div>Accumulated Contact Hours: <strong>{traineeHours.toFixed(1)} hrs</strong></div>
             </div>
           </div>
