@@ -184,6 +184,58 @@ body {
   top: 41px;
   height: calc(100vh - 41px);
   z-index: 40;
+  transition: width 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.app-sidebar.collapsed {
+  width: 72px;
+}
+
+.sidebar-collapse-btn {
+  background: var(--surface-dim);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--radius-md);
+  color: var(--text-subtle);
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.sidebar-collapse-btn:hover {
+  background: var(--primary-tint);
+  color: var(--primary);
+  border-color: var(--primary);
+}
+
+.app-sidebar.collapsed .sidebar-header {
+  padding: 14px 12px;
+}
+
+.app-sidebar.collapsed .sidebar-brand {
+  margin-bottom: 0;
+  justify-content: center;
+}
+
+.app-sidebar.collapsed .sidebar-nav {
+  padding: 10px 8px;
+}
+
+.app-sidebar.collapsed .nav-item button {
+  justify-content: center;
+  padding: 10px 0;
+}
+
+.app-sidebar.collapsed .sidebar-footer {
+  padding: 12px 8px;
+}
+
+.app-sidebar.collapsed .user-profile-card {
+  justify-content: center;
+  padding: 6px;
 }
 
 .sidebar-header {

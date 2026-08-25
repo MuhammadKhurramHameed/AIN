@@ -243,6 +243,31 @@ export const apiService = {
     }
   },
 
+  // Question Bank
+  async getQuestions() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/questions`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] getQuestions error:', err.message);
+      return null;
+    }
+  },
+
+  async addQuestion(questionData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/questions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(questionData)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] addQuestion error:', err.message);
+      return null;
+    }
+  },
+
   // Audit Logs
   async getAuditLogs() {
     try {

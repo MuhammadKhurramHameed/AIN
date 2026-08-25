@@ -294,6 +294,9 @@ export const AppProvider = ({ children }) => {
     setPartners(prev => [...prev, newPartner]);
   };
 
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+  const toggleSidebar = () => setIsSidebarCollapsed(prev => !prev);
+
   return (
     <AppContext.Provider value={{
       currentRole,
@@ -314,6 +317,8 @@ export const AppProvider = ({ children }) => {
       modalData,
       capstoneScore,
       isBackendConnected,
+      isSidebarCollapsed,
+      toggleSidebar,
       setCapstoneScore,
       switchRole,
       navigateTo,
