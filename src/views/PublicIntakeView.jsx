@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useApp } from '../context/AppContext';
-import { UserCheck, CheckCircle } from 'lucide-react';
+import { UserCheck, CheckCircle, ShieldCheck } from 'lucide-react';
 
 export const PublicIntakeView = () => {
-  const { programme, tracks, provincialStats, registerTrainee, navigateTo } = useApp();
+  const { programme, tracks, registerTrainee, navigateTo } = useApp();
   const [formData, setFormData] = useState({
     cnic: '35201-1234567-8',
     fullName: 'Fatima Khan',
@@ -174,44 +174,33 @@ export const PublicIntakeView = () => {
         <div className="col-span-4">
           <div className="card" style={{ marginBottom: "24px" }}>
             <div className="card-header">
-              <h4 className="card-title">Real-Time Quota Balancer</h4>
-              <span className="badge badge-success">Live Engine</span>
+              <h4 className="card-title">Affirmative Quota Rule</h4>
+              <span className="badge badge-success">Active Rule</span>
             </div>
             <div style={{ textAlign: "center", margin: "16px 0" }}>
               <div style={{ fontFamily: "var(--font-headline)", fontSize: "36px", fontWeight: 800, color: "var(--primary)" }}>
                 {femalePct}%
               </div>
-              <div style={{ fontSize: "12px", color: "var(--text-subtle)" }}>Nationwide Female Trainee Ratio</div>
+              <div style={{ fontSize: "12px", color: "var(--text-subtle)" }}>Nationwide Female Ratio</div>
               <div className="progress-bar-bg" style={{ marginTop: "12px" }}>
                 <div className="progress-bar-fill fill-success" style={{ width: `${femalePct}%` }}></div>
               </div>
             </div>
             <div style={{ fontSize: "11.5px", color: "var(--text-muted)", background: "var(--surface-dim)", padding: "12px", borderRadius: "var(--radius-md)" }}>
               <CheckCircle size={14} style={{ verticalAlign: "middle", color: "var(--success)", marginRight: "6px" }} />
-              Statutory Rule: Minimum 30.0% female ratio enforced. Female intake applications are given priority routing.
+              Statutory Requirement: Minimum 30.0% female trainee ratio enforced across all regional batches.
             </div>
           </div>
 
           <div className="card">
             <div className="card-header">
-              <h4 className="card-title">Provincial Quota Allocation</h4>
+              <h4 className="card-title">Intake Help & Support</h4>
             </div>
-            <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-              {provincialStats.map(p => (
-                <div key={p.province} style={{ fontSize: "12.5px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontWeight: 600, marginBottom: "3px" }}>
-                    <span>{p.province}</span>
-                    <span style={{ fontFamily: "var(--font-mono)", color: "var(--primary)" }}>{p.enrolled} / {p.capacity}</span>
-                  </div>
-                  <div className="progress-bar-bg">
-                    <div className="progress-bar-fill" style={{ width: `${(p.enrolled / p.capacity * 100).toFixed(1)}%` }}></div>
-                  </div>
-                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "10px", color: "var(--text-subtle)", marginTop: "2px" }}>
-                    <span>Female Ratio: {p.female_pct}%</span>
-                    <span>{(p.enrolled / p.capacity * 100).toFixed(0)}% Filled</span>
-                  </div>
-                </div>
-              ))}
+            <p style={{ fontSize: "12px", color: "var(--text-subtle)" }}>
+              Need assistance with your registration or CNIC verification? Contact the MoITT Intake Desk:
+            </p>
+            <div style={{ marginTop: "12px", fontSize: "12px", fontWeight: 600, color: "var(--primary)" }}>
+              📧 intake.help@moitt.gov.pk
             </div>
           </div>
         </div>

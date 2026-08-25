@@ -78,6 +78,124 @@ export const apiService = {
     }
   },
 
+  // Cohorts Management
+  async getCohorts() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/cohorts`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] getCohorts error:', err.message);
+      return null;
+    }
+  },
+
+  async addCohort(cohortData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/cohorts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(cohortData)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] addCohort error:', err.message);
+      return null;
+    }
+  },
+
+  // Telemetry & Live Chat
+  async getChatMessages() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/telemetry/chat`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] getChatMessages error:', err.message);
+      return null;
+    }
+  },
+
+  async sendChatMessage(msgData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/telemetry/chat`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(msgData)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] sendChatMessage error:', err.message);
+      return null;
+    }
+  },
+
+  async forceTelemetryPing(actor) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/telemetry/force-ping`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ actor })
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] forceTelemetryPing error:', err.message);
+      return null;
+    }
+  },
+
+  // Assessment Submission
+  async submitAssessment(payload) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/assessment/submit`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] submitAssessment error:', err.message);
+      return null;
+    }
+  },
+
+  // Security Key Rotation
+  async rotateEd25519Key() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/security/rotate-key`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' }
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] rotateEd25519Key error:', err.message);
+      return null;
+    }
+  },
+
+  // Users Management
+  async getUsers() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] getUsers error:', err.message);
+      return null;
+    }
+  },
+
+  async updateUser(userId, data) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/users/${userId}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] updateUser error:', err.message);
+      return null;
+    }
+  },
+
   // Certificate Verification
   async verifyCertificate(query) {
     try {

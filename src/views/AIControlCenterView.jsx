@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Cpu, Server, Key, Zap, CheckCircle2, ShieldCheck, Activity } from 'lucide-react';
+import { Cpu, Zap, ShieldCheck, Activity, Key } from 'lucide-react';
+import { AreaChart, Area, XAxis, YAxis, Tooltip, ResponsiveContainer, CartesianGrid } from 'recharts';
 
 export const AIControlCenterView = () => {
   const [providers] = useState([
@@ -9,9 +10,17 @@ export const AIControlCenterView = () => {
     { id: "prov-4", name: "National On-Prem Ollama Llama-3 Cluster", providerId: "ollama", status: "DEGRADED", quota: "Unlimited", used: "4,500,000", model: "llama-3-70b-instruct", latency: "310ms" }
   ]);
 
+  const tokenUsageTrend = [
+    { month: 'Jan', openai: 8.2, anthropic: 4.1, google: 6.5, ollama: 2.1 },
+    { month: 'Feb', openai: 9.8, anthropic: 5.4, google: 7.2, ollama: 2.8 },
+    { month: 'Mar', openai: 11.4, anthropic: 6.8, google: 8.9, ollama: 3.4 },
+    { month: 'Apr', openai: 12.9, anthropic: 7.9, google: 10.1, ollama: 4.0 },
+    { month: 'May', openai: 14.25, anthropic: 8.9, google: 11.1, ollama: 4.5 }
+  ];
+
   return (
     <div className="page-view">
-      {/* KPI Stats Header */}
+      {/* KPI Header */}
       <div className="grid-4" style={{ marginBottom: "24px" }}>
         <div className="kpi-card">
           <div className="kpi-icon"><Cpu size={22} /></div>
@@ -32,6 +41,31 @@ export const AIControlCenterView = () => {
           <div className="kpi-icon" style={{ background: "var(--warning-tint)", color: "var(--warning)" }}><Activity size={22} /></div>
           <div className="kpi-value">160ms</div>
           <div className="kpi-label">Average API Latency</div>
+        </div>
+      </div>
+
+      {/* Interactive Token Usage Area Chart */}
+      <div className="card" style={{ marginBottom: "24px" }}>
+        <div className="card-header">
+          <div>
+            <h3 className="card-title">LLM Token Consumption Analytics</h3>
+            <p className="card-subtitle">Monthly token volume (Millions) per provider model</p>
+          </div>
+          <span className="badge badge-primary">Live Usage Stream</span>
+        </div>
+        <div style={{ width: '100%', height: 260 }}>
+          <ResponsiveContainer>
+            <AreaChart data={tokenUsageTrend} margin={{ top: 10, right: 20, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" stroke="#f1f5f9" />
+              <XAxis dataKey="month" />
+              <YAxis tickFormatter={(val) => `${val}M`} />
+              <Tooltip formatter={(val) => `${val}M Tokens`} />
+              <Area type="monotone" dataKey="openai" name="OpenAI GPT-4o" stackId="1" stroke="#1d4ed8" fill="#3b82f6" />
+              <Area type="monotone" dataKey="google" name="Google Gemini" stackId="1" stroke="#16a34a" fill="#4ade80" />
+              <Area type="monotone" dataKey="anthropic" name="Anthropic Claude" stackId="1" stroke="#8b5cf6" fill="#c084fc" />
+              <Area type="monotone" dataKey="ollama" name="Local Ollama" stackId="1" stroke="#d97706" fill="#fde047" />
+            </AreaChart>
+          </ResponsiveContainer>
         </div>
       </div>
 

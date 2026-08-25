@@ -1,73 +1,111 @@
-import React, { useState } from 'react';
-import { useApp } from '../context/AppContext';
-import { Video, Send } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Video, Send, Users, ShieldCheck, CheckCircle2 } from 'lucide-react';
+import { apiService } from '../services/api';
 
 export const LiveClassroomView = () => {
-  const { heartbeatPing, traineeHours } = useApp();
   const [messages, setMessages] = useState([
-    { sender: "Usman Tariq", text: "Will model quantization affect inference latency on low-resource edge devices?", isTrainer: false },
-    { sender: "Dr. Zeeshan (Trainer)", text: "Yes, Int8 quantization reduces memory bandwidth usage by ~4x with minimal accuracy drop.", isTrainer: true }
+    { id: "m1", sender: "Fatima Khan", role: "Trainee", text: "Dr. Zeeshan, can you clarify how Int8 quantization affects model accuracy in edge deployment?", time: "10:14 AM" },
+    { id: "m2", sender: "Dr. Zeeshan Haider", role: "Trainer", text: "Excellent question Fatima! Int8 quantization typically incurs < 1% accuracy drop if post-training calibration is performed correctly.", time: "10:16 AM" }
   ]);
-  const [inputMsg, setInputMsg] = useState("");
+  const [inputText, setInputText] = useState("");
 
-  const handleSend = (e) => {
+  useEffect(() => {
+    const fetchChat = async () => {
+      const res = await apiService.getChatMessages();
+      if (res && res.success && res.data.length > 0) {
+        setMessages(res.data.map(m => ({
+          id: m._id,
+          sender: m.sender,
+          role: m.role,
+          text: m.text,
+          time: m.timestamp || "10:20 AM"
+        })));
+      }
+    };
+    fetchChat();
+  }, []);
+
+  const handleSendMessage = async (e) => {
     e.preventDefault();
-    if (!inputMsg.trim()) return;
-    setMessages(prev => [...prev, { sender: "Fatima Khan (You)", text: inputMsg, isTrainer: false }]);
-    setInputMsg("");
+    if (!inputText.trim()) return;
+    const newMsg = {
+      sender: "Fatima Khan",
+      role: "Trainee",
+      text: inputText.trim()
+    };
+
+    setMessages(prev => [...prev, { ...newMsg, id: Date.now().toString(), time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) }]);
+    setInputText("");
+
+    await apiService.sendChatMessage(newMsg);
   };
 
   return (
     <div className="page-view">
       <div className="grid-12">
+        {/* Video Player */}
         <div className="col-span-8">
-          <div className="video-wrapper">
-            <div className="video-overlay-badge">
-              <span className="pulse-dot"></span>
-              <span>NUST Cohort 04 — Live Webinar</span>
-            </div>
+          <div className="card" style={{ padding: 0, overflow: "hidden" }}>
+            <div style={{ background: "#0f172a", height: "420px", display: "flex", flexDirection: "column", justifyContent: "center", alignItems: "center", color: "#ffffff", position: "relative" }}>
+              <div className="badge badge-error" style={{ position: "absolute", top: "16px", left: "16px" }}>
+                🔴 LIVE TELEMETRY STREAMING
+              </div>
+              <div className="badge badge-neutral" style={{ position: "absolute", top: "16px", right: "16px" }}>
+                WebSocket Ping 60s Active
+              </div>
 
-            <div style={{ textAlign: "center", color: "#ffffff" }}>
-              <Video size={64} style={{ color: "#60a5fa", margin: "0 auto 12px auto" }} />
-              <h3 style={{ fontFamily: "var(--font-headline)", fontSize: "20px", fontWeight: 700 }}>
-                Live Session: Scalable MLOps Architecture
+              <Video size={56} style={{ color: "var(--primary-light)", marginBottom: "16px" }} />
+              <h3 style={{ fontFamily: "var(--font-headline)", fontSize: "18px", fontWeight: 700 }}>
+                Track 1: Applied MLOps & LLM Orchestration
               </h3>
-              <p style={{ color: "#94a3b8", fontSize: "13px" }}>Instructor: Dr. Zeeshan Haider (NUST)</p>
+              <p style={{ fontSize: "13px", color: "#94a3b8", marginTop: "4px" }}>
+                Cohort NUST-MLOps-Batch-04 — Lead Trainer: Dr. Zeeshan Haider
+              </p>
             </div>
-
-            <div className="video-overlay-telemetry">
-              <div>Session Telemetry: <strong style={{ color: "#4ade80" }}>Active</strong></div>
-              <div>Accumulated Contact Hours: <strong>{traineeHours.toFixed(1)} hrs</strong></div>
+            <div style={{ padding: "16px", background: "var(--surface-card)" }}>
+              <h4 style={{ fontWeight: 700 }}>Module 4: Quantization, TensorRT & Model Serving</h4>
+              <p style={{ fontSize: "12px", color: "var(--text-subtle)", marginTop: "4px" }}>
+                Live contact hours verification ping automatically logged every 60 seconds to satisfy the 24h requirement.
+              </p>
             </div>
           </div>
         </div>
 
+        {/* Live Q&A Chat */}
         <div className="col-span-4">
-          <div className="card" style={{ height: "100%", display: "flex", flexDirection: "column" }}>
+          <div className="card" style={{ height: "510px", display: "flex", flexDirection: "column" }}>
             <div className="card-header">
-              <h4 className="card-title">Live Q&A Chat</h4>
-              <span className="badge badge-success">480 Online</span>
+              <div>
+                <h4 className="card-title">Live Q&A Classroom Chat</h4>
+                <p className="card-subtitle">Moderated Trainee & Trainer Discussion</p>
+              </div>
+              <span className="badge badge-primary">242 Active</span>
             </div>
 
-            <div style={{ flex: 1, overflowY: "auto", display: "flex", flexDirection: "column", gap: "12px", maxHeight: "320px" }}>
-              {messages.map((m, idx) => (
-                <div key={idx} style={{ background: m.isTrainer ? "var(--primary-tint)" : "var(--surface-dim)", padding: "8px 12px", borderRadius: "var(--radius-md)" }}>
-                  <strong style={{ fontSize: "12px", color: m.isTrainer ? "var(--primary-dark)" : "var(--primary)" }}>{m.sender}:</strong>
-                  <p style={{ fontSize: "12px", color: "var(--text-main)", marginTop: "2px" }}>{m.text}</p>
+            <div style={{ flex: 1, overflowY: "auto", padding: "10px", display: "flex", flexDirection: "column", gap: "10px" }}>
+              {messages.map(msg => (
+                <div key={msg.id} style={{ background: msg.role === 'Trainer' ? 'var(--primary-tint)' : 'var(--surface-dim)', padding: "10px", borderRadius: "var(--radius-md)" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", fontSize: "11px", marginBottom: "4px" }}>
+                    <strong style={{ color: msg.role === 'Trainer' ? 'var(--primary)' : 'var(--text-main)' }}>
+                      {msg.sender} {msg.role === 'Trainer' && '(Lead Trainer)'}
+                    </strong>
+                    <span style={{ color: "var(--text-subtle)" }}>{msg.time}</span>
+                  </div>
+                  <p style={{ fontSize: "12px", color: "var(--text-main)", margin: 0 }}>{msg.text}</p>
                 </div>
               ))}
             </div>
 
-            <form onSubmit={handleSend} style={{ marginTop: "14px", display: "flex", gap: "8px" }}>
+            <form onSubmit={handleSendMessage} style={{ display: "flex", gap: "8px", marginTop: "10px", paddingTop: "10px", borderTop: "1px solid var(--border-subtle)" }}>
               <input
                 type="text"
                 className="form-control"
                 placeholder="Ask a question..."
-                value={inputMsg}
-                onChange={(e) => setInputMsg(e.target.value)}
+                value={inputText}
+                onChange={(e) => setInputText(e.target.value)}
               />
-              <button type="submit" className="btn btn-primary">
-                <Send size={16} />
+              <button type="submit" className="btn btn-primary btn-sm">
+                <Send size={14} />
               </button>
             </form>
           </div>

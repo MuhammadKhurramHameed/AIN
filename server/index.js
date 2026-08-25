@@ -16,6 +16,11 @@ import aiRoutes from './routes/aiRoutes.js';
 import kanbanRoutes from './routes/kanbanRoutes.js';
 import questionRoutes from './routes/questionRoutes.js';
 import integrationRoutes from './routes/integrationRoutes.js';
+import cohortRoutes from './routes/cohortRoutes.js';
+import telemetryRoutes from './routes/telemetryRoutes.js';
+import assessmentRoutes from './routes/assessmentRoutes.js';
+import userRoutes from './routes/userRoutes.js';
+import securityRoutes from './routes/securityRoutes.js';
 
 dotenv.config();
 
@@ -53,6 +58,11 @@ app.use('/api/v1/ai', aiRoutes);
 app.use('/api/v1/kanban', kanbanRoutes);
 app.use('/api/v1/questions', questionRoutes);
 app.use('/api/v1/integrations', integrationRoutes);
+app.use('/api/v1/cohorts', cohortRoutes);
+app.use('/api/v1/telemetry', telemetryRoutes);
+app.use('/api/v1/assessment', assessmentRoutes);
+app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/security', securityRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {
