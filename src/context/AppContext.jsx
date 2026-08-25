@@ -13,9 +13,15 @@ export const ROLE_CONFIGS = {
     subtitle: "National AI Advancement Initiative — Telemetry & Quota Control",
     menu: [
       { id: "admin-oversight", label: "National Oversight", icon: "LayoutDashboard" },
+      { id: "user-management", label: "User Directory", icon: "Users" },
+      { id: "ai-control", label: "AI Control Center", icon: "Cpu" },
       { id: "admin-partners", label: "Consortium Partners", icon: "Building2" },
-      { id: "admin-audit", label: "Compliance & Audit Logs", icon: "ShieldCheck" },
       { id: "curriculum-builder", label: "Track Architecture", icon: "Layers" },
+      { id: "curriculum-kanban", label: "Curriculum Kanban", icon: "Kanban" },
+      { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
+      { id: "integrations", label: "System Integrations", icon: "Network" },
+      { id: "security", label: "Security & Keys", icon: "Lock" },
+      { id: "admin-audit", label: "Compliance & Audit Logs", icon: "ShieldCheck" },
       { id: "public-intake", label: "Public Intake Portal", icon: "UserPlus" },
       { id: "authenticator", label: "Credential Authenticator", icon: "QrCode" }
     ]
@@ -28,6 +34,10 @@ export const ROLE_CONFIGS = {
     subtitle: "Read-Only Compliance & Live Telemetry Inspector",
     menu: [
       { id: "admin-oversight", label: "National Analytics", icon: "LayoutDashboard" },
+      { id: "user-management", label: "User Directory", icon: "Users" },
+      { id: "ai-control", label: "AI Usage Logs", icon: "Cpu" },
+      { id: "integrations", label: "System Integrations", icon: "Network" },
+      { id: "security", label: "Security Audit", icon: "Lock" },
       { id: "admin-audit", label: "Audit Logs", icon: "ShieldCheck" },
       { id: "authenticator", label: "Credential Verification", icon: "QrCode" }
     ]
@@ -40,6 +50,8 @@ export const ROLE_CONFIGS = {
     subtitle: "NUST Partner Portal — Cohorts & Batch Approvals",
     menu: [
       { id: "consortium-dashboard", label: "Partner Overview", icon: "Building2" },
+      { id: "curriculum-kanban", label: "Curriculum Kanban", icon: "Kanban" },
+      { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
       { id: "trainer-hub", label: "Cohort Operations", icon: "Users" },
       { id: "authenticator", label: "Certificate Lookup", icon: "QrCode" }
     ]
@@ -52,6 +64,7 @@ export const ROLE_CONFIGS = {
     subtitle: "Cohort NUST-MLOps-Batch-04 Management",
     menu: [
       { id: "trainer-hub", label: "Live Classroom", icon: "Users" },
+      { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
       { id: "trainer-grading", label: "Grading Workspace", icon: "CheckSquare" },
       { id: "trainee-classroom", label: "Webinar View", icon: "Video" }
     ]
@@ -63,6 +76,8 @@ export const ROLE_CONFIGS = {
     title: "Curriculum Quality & Pedagogy",
     subtitle: "Auditing Level 1, Level 2, and Level 3 Taxonomies",
     menu: [
+      { id: "curriculum-kanban", label: "Curriculum Kanban", icon: "Kanban" },
+      { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
       { id: "curriculum-builder", label: "Track Architecture", icon: "Layers" },
       { id: "admin-audit", label: "Curriculum Logs", icon: "ShieldCheck" }
     ]

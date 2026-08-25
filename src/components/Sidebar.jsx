@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { LayoutDashboard, Building2, ShieldCheck, Layers, UserPlus, QrCode, Users, CheckSquare, Video, FileText, Award, Network } from 'lucide-react';
+import { LayoutDashboard, Building2, ShieldCheck, Layers, UserPlus, QrCode, Users, CheckSquare, Video, FileText, Award, Network, Cpu, Kanban, BookOpen, Lock } from 'lucide-react';
 
 const ICON_MAP = {
   LayoutDashboard,
@@ -13,7 +13,12 @@ const ICON_MAP = {
   CheckSquare,
   Video,
   FileText,
-  Award
+  Award,
+  Network,
+  Cpu,
+  Kanban,
+  BookOpen,
+  Lock
 };
 
 export const Sidebar = () => {

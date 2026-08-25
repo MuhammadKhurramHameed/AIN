@@ -12,6 +12,10 @@ import trackRoutes from './routes/trackRoutes.js';
 import certRoutes from './routes/certRoutes.js';
 import auditRoutes from './routes/auditRoutes.js';
 import trainerRoutes from './routes/trainerRoutes.js';
+import aiRoutes from './routes/aiRoutes.js';
+import kanbanRoutes from './routes/kanbanRoutes.js';
+import questionRoutes from './routes/questionRoutes.js';
+import integrationRoutes from './routes/integrationRoutes.js';
 
 dotenv.config();
 
@@ -45,6 +49,10 @@ app.use('/api/v1/tracks', trackRoutes);
 app.use('/api/v1/certificates', certRoutes);
 app.use('/api/v1/audit', auditRoutes);
 app.use('/api/v1/trainers', trainerRoutes);
+app.use('/api/v1/ai', aiRoutes);
+app.use('/api/v1/kanban', kanbanRoutes);
+app.use('/api/v1/questions', questionRoutes);
+app.use('/api/v1/integrations', integrationRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

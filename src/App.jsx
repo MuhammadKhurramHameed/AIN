@@ -17,6 +17,13 @@ import { LiveClassroomView } from './views/LiveClassroomView';
 import { TimedAssessmentView } from './views/TimedAssessmentView';
 import { CertificateIssuanceView } from './views/CertificateIssuanceView';
 
+import { AIControlCenterView } from './views/AIControlCenterView';
+import { KanbanView } from './views/KanbanView';
+import { QuestionBankView } from './views/QuestionBankView';
+import { IntegrationsView } from './views/IntegrationsView';
+import { UserManagementView } from './views/UserManagementView';
+import { SecurityView } from './views/SecurityView';
+
 const VIEW_MAP = {
   "public-intake": PublicIntakeView,
   "authenticator": AuthenticatorView,
@@ -31,6 +38,12 @@ const VIEW_MAP = {
   "trainee-classroom": LiveClassroomView,
   "trainee-assessment": TimedAssessmentView,
   "trainee-certificate": CertificateIssuanceView,
+  "ai-control": AIControlCenterView,
+  "curriculum-kanban": KanbanView,
+  "question-bank": QuestionBankView,
+  "integrations": IntegrationsView,
+  "user-management": UserManagementView,
+  "security": SecurityView
 };
 
 export const AppContent = () => {
