@@ -29,6 +29,14 @@ import { SignInView } from './views/SignInView';
 import { TwoFactorVerifyView } from './views/TwoFactorVerifyView';
 import { OnboardingWalkthroughView } from './views/OnboardingWalkthroughView';
 
+import { TicketHelpdeskView } from './views/TicketHelpdeskView';
+import { PythonCodeLabView } from './views/PythonCodeLabView';
+import { TrainerApprovalView } from './views/TrainerApprovalView';
+import { TrainerProposalsView } from './views/TrainerProposalsView';
+import { TrainerRegistrationView } from './views/TrainerRegistrationView';
+import { CourseApprovalGatekeeperView } from './views/CourseApprovalGatekeeperView';
+import { CourseBuilderStudioView } from './views/CourseBuilderStudioView';
+
 const VIEW_MAP = {
   "landing-page": LandingPageView,
   "sign-in": SignInView,
@@ -52,14 +60,21 @@ const VIEW_MAP = {
   "question-bank": QuestionBankView,
   "integrations": IntegrationsView,
   "user-management": UserManagementView,
-  "security": SecurityView
+  "security": SecurityView,
+  "tickets": TicketHelpdeskView,
+  "python-lab": PythonCodeLabView,
+  "trainer-approval": TrainerApprovalView,
+  "trainer-proposals": TrainerProposalsView,
+  "trainer-register": TrainerRegistrationView,
+  "course-gatekeeper": CourseApprovalGatekeeperView,
+  "course-studio": CourseBuilderStudioView
 };
 
 export const AppContent = () => {
   const { currentView, isAuthenticated, showDemoBar } = useApp();
   const ActiveViewComponent = VIEW_MAP[currentView] || LandingPageView;
 
-  const publicViews = ["landing-page", "sign-in", "2fa-verify", "public-intake", "authenticator"];
+  const publicViews = ["landing-page", "sign-in", "2fa-verify", "public-intake", "authenticator", "python-lab", "tickets"];
   const isPublicPage = publicViews.includes(currentView) || !isAuthenticated;
 
   return (

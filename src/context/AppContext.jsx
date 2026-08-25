@@ -19,6 +19,8 @@ export const ROLE_CONFIGS = {
       { id: "curriculum-builder", label: "Track Architecture", icon: "Layers" },
       { id: "curriculum-kanban", label: "Curriculum Kanban", icon: "Kanban" },
       { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
+      { id: "python-lab", label: "Python AI Code Lab", icon: "Code" },
+      { id: "tickets", label: "Helpdesk Tickets", icon: "LifeBuoy" },
       { id: "integrations", label: "System Integrations", icon: "Network" },
       { id: "security", label: "Security & Keys", icon: "Lock" },
       { id: "admin-audit", label: "Compliance & Audit Logs", icon: "ShieldCheck" },
@@ -36,6 +38,7 @@ export const ROLE_CONFIGS = {
       { id: "admin-oversight", label: "National Analytics", icon: "LayoutDashboard" },
       { id: "user-management", label: "User Directory", icon: "Users" },
       { id: "ai-control", label: "AI Usage Logs", icon: "Cpu" },
+      { id: "tickets", label: "Helpdesk Audit", icon: "LifeBuoy" },
       { id: "integrations", label: "System Integrations", icon: "Network" },
       { id: "security", label: "Security Audit", icon: "Lock" },
       { id: "admin-audit", label: "Audit Logs", icon: "ShieldCheck" },
@@ -53,6 +56,7 @@ export const ROLE_CONFIGS = {
       { id: "curriculum-kanban", label: "Curriculum Kanban", icon: "Kanban" },
       { id: "question-bank", label: "Question Bank", icon: "BookOpen" },
       { id: "trainer-hub", label: "Cohort Operations", icon: "Users" },
+      { id: "tickets", label: "Partner Support", icon: "LifeBuoy" },
       { id: "authenticator", label: "Certificate Lookup", icon: "QrCode" }
     ]
   },
@@ -65,8 +69,10 @@ export const ROLE_CONFIGS = {
     menu: [
       { id: "trainer-hub", label: "Trainer Dashboard", icon: "Users" },
       { id: "trainee-classroom", label: "Live Classroom", icon: "Video" },
+      { id: "python-lab", label: "Python AI Lab", icon: "Code" },
       { id: "trainer-grading", label: "Grading & Feedback", icon: "FileText" },
       { id: "question-bank", label: "Question Authoring", icon: "BookOpen" },
+      { id: "tickets", label: "Trainer Helpdesk", icon: "LifeBuoy" },
       { id: "authenticator", label: "Credential Lookup", icon: "QrCode" }
     ]
   },
@@ -91,8 +97,10 @@ export const ROLE_CONFIGS = {
     menu: [
       { id: "trainee-dashboard", label: "My Dashboard", icon: "LayoutDashboard" },
       { id: "trainee-classroom", label: "Live Classroom", icon: "Video" },
+      { id: "python-lab", label: "Python AI Code Lab", icon: "Code" },
       { id: "trainee-assessment", label: "Online Assessment", icon: "FileText" },
       { id: "trainee-certificate", label: "My Certificate", icon: "Award" },
+      { id: "tickets", label: "Support & Helpdesk", icon: "LifeBuoy" },
       { id: "authenticator", label: "Verify Credential", icon: "QrCode" }
     ]
   }

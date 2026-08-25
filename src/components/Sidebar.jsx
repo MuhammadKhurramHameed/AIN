@@ -1,6 +1,6 @@
 import React from 'react';
 import { useApp } from '../context/AppContext';
-import { LayoutDashboard, Building2, ShieldCheck, Layers, UserPlus, QrCode, Users, CheckSquare, Video, FileText, Award, Network, Cpu, Kanban, BookOpen, Lock, ChevronLeft, ChevronRight, LogOut } from 'lucide-react';
+import { LayoutDashboard, Building2, ShieldCheck, Layers, UserPlus, QrCode, Users, CheckSquare, Video, FileText, Award, Network, Cpu, Kanban, BookOpen, Lock, ChevronLeft, ChevronRight, LogOut, LifeBuoy, Code, UserCheck, Sparkles } from 'lucide-react';
 
 const ICON_MAP = {
   LayoutDashboard,
@@ -18,7 +18,11 @@ const ICON_MAP = {
   Cpu,
   Kanban,
   BookOpen,
-  Lock
+  Lock,
+  LifeBuoy,
+  Code,
+  UserCheck,
+  Sparkles
 };
 
 export const Sidebar = () => {
