@@ -55,6 +55,7 @@ export const DemoRoleBar = () => {
           <QrCode size={13} />
           <span>Authenticator</span>
         </button>
+      </div>
     </div>
   );
 };
