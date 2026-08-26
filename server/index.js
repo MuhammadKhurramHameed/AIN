@@ -22,6 +22,7 @@ import assessmentRoutes from './routes/assessmentRoutes.js';
 import userRoutes from './routes/userRoutes.js';
 import securityRoutes from './routes/securityRoutes.js';
 import ticketRoutes from './routes/ticketRoutes.js';
+import reportRoutes from './routes/reportRoutes.js';
 
 dotenv.config();
 
@@ -65,6 +66,7 @@ app.use('/api/v1/assessment', assessmentRoutes);
 app.use('/api/v1/users', userRoutes);
 app.use('/api/v1/security', securityRoutes);
 app.use('/api/v1/tickets', ticketRoutes);
+app.use('/api/v1/reports', reportRoutes);
 
 // Error Handling Middleware
 app.use((err, req, res, next) => {

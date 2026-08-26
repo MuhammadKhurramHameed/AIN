@@ -197,18 +197,18 @@ export const INITIAL_DATA = {
     SUPER_ADMIN: {
       user_id: "usr-admin-01",
       name: "Dr. Kamran Siddiqui",
-      title: "National Director — NAIAI / MoITT",
+      title: "National Director — AIN / NAIAI",
       role_code: "SUPER_ADMIN",
-      email: "director.naiai@moitt.gov.pk",
+      email: "director@ain.gov.pk",
       cnic: "61101-1234567-1",
       avatar_initials: "KS"
     },
     MOITT_AUDITOR: {
       user_id: "usr-auditor-02",
       name: "Ayesha Malik",
-      title: "Senior Technical Auditor — MoITT Compliance",
+      title: "Senior Compliance Auditor — AIN Platform",
       role_code: "MOITT_AUDITOR",
-      email: "ayesha.malik@audit.gov.pk",
+      email: "ayesha.malik@ain.gov.pk",
       cnic: "35202-9876543-2",
       avatar_initials: "AM"
     },
@@ -364,14 +364,14 @@ export const INITIAL_DATA = {
       },
       {
         id: 4,
-        text: "What is the minimum statutory female participation quota mandated by the National AI Advancement Initiative policy?",
+        text: "Which mechanism in Transformer architectures allows the model to dynamically focus on different parts of an input sequence regardless of positional distance?",
         options: [
-          "≥ 15%",
-          "≥ 25%",
-          "≥ 30%",
-          "≥ 50%"
+          "Scaled Dot-Product Self-Attention",
+          "Batch Normalization",
+          "Max Pooling",
+          "Gradient Clipping"
         ],
-        correct: 2
+        correct: 0
       },
       {
         id: 5,

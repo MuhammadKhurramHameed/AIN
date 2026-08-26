@@ -77,8 +77,8 @@ const AVAILABLE_ASSIGNEES = [
     id: "usr-auditor-02",
     name: "Engr. Ayesha Malik",
     role: "MOITT_AUDITOR",
-    email: "auditor.ai@moitt.gov.pk",
-    desk: "MoITT Credential Verification Desk"
+    email: "ayesha.malik@ain.gov.pk",
+    desk: "AIN Credential Verification Desk"
   },
   {
     id: "usr-partner-03",
@@ -188,7 +188,7 @@ export const TicketHelpdeskView = () => {
         const matchId = t.id?.toLowerCase().includes(q);
         const matchTitle = t.title?.toLowerCase().includes(q);
         const matchDesc = t.description?.toLowerCase().includes(q) || t.messages?.[0]?.text?.toLowerCase().includes(q);
-        const matchUser = t.created_by?.name?.toLowerCase().includes(q) || t.created_by?.email?.toLowerCase().includes(q);
+        const matchUser = (t.created_by?.name || "Fatima Khan").toLowerCase().includes(q) || t.created_by?.email?.toLowerCase().includes(q);
         const matchCourse = t.related_course?.toLowerCase().includes(q);
         if (!matchId && !matchTitle && !matchDesc && !matchUser && !matchCourse) {
           return false;
@@ -240,48 +240,48 @@ export const TicketHelpdeskView = () => {
   };
 
   const applyCannedResponse = (text) => {
-    setReplyText(text);
+    setReplyText(prev => prev ? `${prev}\n\n${text}` : text);
   };
 
   const getCategoryIcon = (category) => {
     switch (category) {
-      case "TECHNICAL": return <Settings size={14} color="var(--primary)" />;
-      case "COURSE_QUERY": return <BookOpen size={14} color="var(--warning)" />;
-      case "CERTIFICATE": return <Award size={14} color="var(--success)" />;
+      case "TECHNICAL": return <Settings size={14} color="#3b82f6" />;
+      case "COURSE_QUERY": return <BookOpen size={14} color="#f59e0b" />;
+      case "CERTIFICATE": return <Award size={14} color="#10b981" />;
       case "CONSORTIUM_OPS": return <Building2 size={14} color="#8b5cf6" />;
       case "CONTENT_REVIEW": return <FileCode size={14} color="#ec4899" />;
       case "COMPLIANCE": return <ShieldCheck size={14} color="#06b6d4" />;
-      default: return <MessageSquare size={14} color="var(--text-subtle)" />;
+      default: return <MessageSquare size={14} color="#64748b" />;
     }
   };
 
   const getCategoryLabel = (category) => {
     switch (category) {
       case "TECHNICAL": return "Technical / LMS";
-      case "COURSE_QUERY": return "Course / Academic";
-      case "CERTIFICATE": return "Certificate";
+      case "COURSE_QUERY": return "Course Academic";
+      case "CERTIFICATE": return "Certificate Verification";
       case "CONSORTIUM_OPS": return "Consortium Operations";
       case "CONTENT_REVIEW": return "Content Review";
-      case "COMPLIANCE": return "Compliance & Quota";
+      case "COMPLIANCE": return "Compliance & Quotas";
       default: return "General Support";
     }
   };
 
   const getPriorityBadge = (priority) => {
     switch (priority) {
-      case "URGENT": return <span className="badge badge-danger">⚡ URGENT</span>;
-      case "HIGH": return <span className="badge badge-warning">HIGH</span>;
-      case "MEDIUM": return <span className="badge badge-primary">MEDIUM</span>;
-      default: return <span className="badge badge-neutral">LOW</span>;
+      case "URGENT": return <span className="badge badge-danger" style={{ fontWeight: 700, padding: "3px 8px" }}>⚡ URGENT</span>;
+      case "HIGH": return <span className="badge badge-warning" style={{ fontWeight: 600, padding: "3px 8px" }}>HIGH</span>;
+      case "MEDIUM": return <span className="badge badge-primary" style={{ fontWeight: 500, padding: "3px 8px" }}>MEDIUM</span>;
+      default: return <span className="badge badge-neutral" style={{ padding: "3px 8px" }}>LOW</span>;
     }
   };
 
   const getStatusBadge = (status) => {
     switch (status) {
-      case "OPEN": return <span className="badge badge-warning"><Clock size={11} style={{ marginRight: '3px' }} /> OPEN</span>;
-      case "IN_PROGRESS": return <span className="badge badge-primary"><Clock size={11} style={{ marginRight: '3px' }} /> IN PROGRESS</span>;
+      case "OPEN": return <span className="badge badge-warning" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><Clock size={11} /> OPEN</span>;
+      case "IN_PROGRESS": return <span className="badge badge-primary" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><Clock size={11} /> IN PROGRESS</span>;
       case "UNDER_REVIEW": return <span className="badge badge-secondary" style={{ background: '#fdf2f8', color: '#9d174d' }}>UNDER REVIEW</span>;
-      case "RESOLVED": return <span className="badge badge-success"><CheckCircle2 size={11} style={{ marginRight: '3px' }} /> RESOLVED</span>;
+      case "RESOLVED": return <span className="badge badge-success" style={{ display: "inline-flex", alignItems: "center", gap: "4px" }}><CheckCircle2 size={11} /> RESOLVED</span>;
       case "CLOSED": return <span className="badge badge-neutral">CLOSED</span>;
       default: return <span className="badge badge-neutral">{status}</span>;
     }
@@ -289,28 +289,41 @@ export const TicketHelpdeskView = () => {
 
   const getRoleBadge = (role) => {
     switch (role) {
-      case "SUPER_ADMIN": return <span className="badge badge-danger" style={{ fontSize: '10px' }}>SUPER ADMIN</span>;
-      case "MOITT_AUDITOR": return <span className="badge badge-warning" style={{ fontSize: '10px' }}>AUDITOR</span>;
-      case "CONSORTIUM_ADMIN": return <span className="badge badge-primary" style={{ fontSize: '10px' }}>CONSORTIUM</span>;
-      case "TRAINER": return <span className="badge badge-success" style={{ fontSize: '10px' }}>TRAINER SME</span>;
-      case "CONTENT_REVIEWER": return <span className="badge badge-secondary" style={{ fontSize: '10px', background: '#fce7f3', color: '#be185d' }}>CREATOR</span>;
-      default: return <span className="badge badge-neutral" style={{ fontSize: '10px' }}>TRAINEE</span>;
+      case "SUPER_ADMIN": return <span className="badge badge-danger" style={{ fontSize: '10px', fontWeight: 700 }}>SUPER ADMIN</span>;
+      case "MOITT_AUDITOR": return <span className="badge badge-warning" style={{ fontSize: '10px', fontWeight: 700 }}>AUDITOR</span>;
+      case "CONSORTIUM_ADMIN": return <span className="badge badge-primary" style={{ fontSize: '10px', fontWeight: 700 }}>CONSORTIUM</span>;
+      case "TRAINER": return <span className="badge badge-success" style={{ fontSize: '10px', fontWeight: 700 }}>TRAINER SME</span>;
+      case "CONTENT_REVIEWER": return <span className="badge badge-secondary" style={{ fontSize: '10px', background: '#fce7f3', color: '#be185d', fontWeight: 700 }}>CREATOR</span>;
+      default: return <span className="badge badge-neutral" style={{ fontSize: '10px', fontWeight: 600 }}>TRAINEE</span>;
     }
   };
 
+  const getRequesterName = (createdBy) => {
+    if (createdBy && createdBy.name) return createdBy.name;
+    if (createdBy && createdBy.role === "TRAINEE") return "Fatima Khan";
+    if (createdBy && createdBy.role === "TRAINER") return "Dr. Zeeshan Haider";
+    if (createdBy && createdBy.role === "SUPER_ADMIN") return "Dr. Kamran Siddiqui";
+    return currentUser?.name || "Fatima Khan";
+  };
+
   return (
-    <div className="page-view">
-      {/* Top Header Card */}
-      <div className="card" style={{ marginBottom: "20px" }}>
-        <div className="card-header" style={{ flexWrap: "wrap", gap: "14px" }}>
+    <div className="page-view" style={{ width: "100%", padding: "20px" }}>
+      
+      {/* Premium Header Banner */}
+      <div className="card" style={{ marginBottom: "20px", padding: "20px 24px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
           <div>
-            <h3 className="card-title" style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <Ticket size={22} color="var(--primary)" /> Universal Support Helpdesk & Ticket Center
-            </h3>
-            <p className="card-subtitle">
-              Enterprise multi-stakeholder resolution system. Automated intelligent routing dispatches course questions to Trainers, credential verifications to MoITT Auditors, and platform anomalies to Central Infrastructure.
+            <div style={{ display: "inline-flex", alignItems: "center", gap: "8px", background: "var(--primary-tint)", border: "1px solid var(--primary-border)", padding: "4px 12px", borderRadius: "9999px", fontSize: "12px", color: "var(--primary-dark)", fontWeight: 700, marginBottom: "8px" }}>
+              <Ticket size={14} color="var(--primary)" /> MoITT Enterprise Resolution Desk
+            </div>
+            <h2 style={{ fontSize: "22px", fontWeight: 800, color: "var(--text-main)", fontFamily: "var(--font-headline)", margin: "0 0 4px 0" }}>
+              Universal Support &amp; Helpdesk Portal
+            </h2>
+            <p style={{ fontSize: "13px", color: "var(--text-subtle)", margin: 0, maxWidth: "780px" }}>
+              Intelligent multi-stakeholder dispatch center for technical assistance, academic SME queries, credential verifications, and consortium operations.
             </p>
           </div>
+
           <div style={{ display: "flex", gap: "10px", alignItems: "center" }}>
             {selectedTicket && (
               <button 
@@ -321,49 +334,69 @@ export const TicketHelpdeskView = () => {
                 <Printer size={15} /> Export Audit Log
               </button>
             )}
-            <button className="btn btn-primary" onClick={() => setShowCreateModal(true)}>
-              <Plus size={16} /> Open New Support Ticket
+            <button 
+              className="btn btn-primary"
+              onClick={() => setShowCreateModal(true)}
+              style={{ display: "flex", alignItems: "center", gap: "6px", fontWeight: 700, padding: "9px 18px" }}
+            >
+              <Plus size={16} /> Open Support Ticket
             </button>
           </div>
         </div>
 
-        {/* Real-time KPI Ribbon */}
-        <div className="grid-12" style={{ gap: "12px", marginTop: "16px" }}>
-          <div className="col-span-2" style={{ background: "var(--surface-dim)", padding: "12px 14px", borderRadius: "var(--radius-md)", border: "1px solid var(--border-subtle)" }}>
-            <div style={{ fontSize: "11px", color: "var(--text-subtle)", fontWeight: 600, textTransform: "uppercase" }}>Total Inquiries</div>
-            <div style={{ fontSize: "20px", fontWeight: 800, color: "var(--text-main)", marginTop: "2px" }}>{kpis.total}</div>
-          </div>
-          <div className="col-span-2" style={{ background: "#fffbeb", padding: "12px 14px", borderRadius: "var(--radius-md)", border: "1px solid #fde68a" }}>
-            <div style={{ fontSize: "11px", color: "#92400e", fontWeight: 600, textTransform: "uppercase" }}>Open Queue</div>
-            <div style={{ fontSize: "20px", fontWeight: 800, color: "#b45309", marginTop: "2px" }}>{kpis.open}</div>
-          </div>
-          <div className="col-span-2" style={{ background: "var(--primary-tint)", padding: "12px 14px", borderRadius: "var(--radius-md)", border: "1px solid var(--primary-border)" }}>
-            <div style={{ fontSize: "11px", color: "var(--primary-dark)", fontWeight: 600, textTransform: "uppercase" }}>In Progress</div>
-            <div style={{ fontSize: "20px", fontWeight: 800, color: "var(--primary)", marginTop: "2px" }}>{kpis.inProgress}</div>
-          </div>
-          <div className="col-span-2" style={{ background: "#f0fdf4", padding: "12px 14px", borderRadius: "var(--radius-md)", border: "1px solid #bbf7d0" }}>
-            <div style={{ fontSize: "11px", color: "#166534", fontWeight: 600, textTransform: "uppercase" }}>Resolved Rate</div>
-            <div style={{ fontSize: "20px", fontWeight: 800, color: "#15803d", marginTop: "2px" }}>{kpis.rate}% ({kpis.resolved})</div>
-          </div>
-          <div className="col-span-4" style={{ background: kpis.urgent > 0 ? "#fef2f2" : "var(--surface-dim)", padding: "12px 14px", borderRadius: "var(--radius-md)", border: kpis.urgent > 0 ? "1px solid #fecaca" : "1px solid var(--border-subtle)", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-            <div>
-              <div style={{ fontSize: "11px", color: kpis.urgent > 0 ? "#991b1b" : "var(--text-subtle)", fontWeight: 600, textTransform: "uppercase" }}>Urgent SLA Escalations</div>
-              <div style={{ fontSize: "20px", fontWeight: 800, color: kpis.urgent > 0 ? "#dc2626" : "var(--text-main)", marginTop: "2px" }}>{kpis.urgent} Pending SLA</div>
+        {/* 4 Clean Metric Cards */}
+        <div className="grid-12" style={{ gap: "14px", marginTop: "20px" }}>
+          <div className="col-span-3" style={{ background: "var(--surface-dim)", padding: "14px 18px", borderRadius: "12px", border: "1px solid var(--border-subtle)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "11.5px", color: "var(--text-subtle)", fontWeight: 700, textTransform: "uppercase" }}>Total Support Inquiries</span>
+              <Ticket size={16} color="var(--primary)" />
             </div>
-            <span className={`badge ${kpis.urgent > 0 ? "badge-danger" : "badge-success"}`}>
-              {kpis.urgent > 0 ? "⚠️ Action Required" : "✅ SLA Compliant"}
-            </span>
+            <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--text-main)", marginTop: "6px", fontFamily: "var(--font-headline)" }}>{kpis.total}</div>
+          </div>
+
+          <div className="col-span-3" style={{ background: "#fffbeb", padding: "14px 18px", borderRadius: "12px", border: "1px solid #fde68a" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "11.5px", color: "#92400e", fontWeight: 700, textTransform: "uppercase" }}>Open Queue</span>
+              <Clock size={16} color="#d97706" />
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 800, color: "#b45309", marginTop: "6px", fontFamily: "var(--font-headline)" }}>{kpis.open}</div>
+          </div>
+
+          <div className="col-span-3" style={{ background: "var(--primary-tint)", padding: "14px 18px", borderRadius: "12px", border: "1px solid var(--primary-border)" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "11.5px", color: "var(--primary-dark)", fontWeight: 700, textTransform: "uppercase" }}>In Progress</span>
+              <RefreshCw size={16} color="var(--primary)" />
+            </div>
+            <div style={{ fontSize: "24px", fontWeight: 800, color: "var(--primary)", marginTop: "6px", fontFamily: "var(--font-headline)" }}>{kpis.inProgress}</div>
+          </div>
+
+          <div className="col-span-3" style={{ background: kpis.urgent > 0 ? "#fef2f2" : "#f0fdf4", padding: "14px 18px", borderRadius: "12px", border: kpis.urgent > 0 ? "1px solid #fecaca" : "1px solid #bbf7d0" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+              <span style={{ fontSize: "11.5px", color: kpis.urgent > 0 ? "#991b1b" : "#166534", fontWeight: 700, textTransform: "uppercase" }}>
+                {kpis.urgent > 0 ? "Urgent SLA Escalations" : "Resolution Rate"}
+              </span>
+              {kpis.urgent > 0 ? <AlertTriangle size={16} color="#dc2626" /> : <CheckCircle2 size={16} color="#16a34a" />}
+            </div>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "baseline", marginTop: "6px" }}>
+              <div style={{ fontSize: "24px", fontWeight: 800, color: kpis.urgent > 0 ? "#dc2626" : "#15803d", fontFamily: "var(--font-headline)" }}>
+                {kpis.urgent > 0 ? `${kpis.urgent} Pending` : `${kpis.rate}%`}
+              </div>
+              <span className={`badge ${kpis.urgent > 0 ? "badge-danger" : "badge-success"}`} style={{ fontSize: "10.5px" }}>
+                {kpis.urgent > 0 ? "⚠️ Action Required" : "SLA Compliant"}
+              </span>
+            </div>
           </div>
         </div>
 
-        {/* Stakeholder Navigation Tabs */}
-        <div style={{ display: "flex", gap: "8px", marginTop: "18px", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "10px", overflowX: "auto" }}>
+        {/* Tab Segment Controls */}
+        <div style={{ display: "flex", gap: "8px", marginTop: "20px", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "12px", overflowX: "auto" }}>
           {isStaff && (
             <button 
               className={`btn btn-sm ${activeTab === "ALL" ? "btn-primary" : "btn-secondary"}`}
               onClick={() => setActiveTab("ALL")}
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
             >
-              <Users size={14} /> All System Tickets ({tickets.length})
+              <Users size={14} /> All Tickets <span className="badge badge-neutral" style={{ marginLeft: "4px" }}>{tickets.length}</span>
             </button>
           )}
 
@@ -371,59 +404,61 @@ export const TicketHelpdeskView = () => {
             <button 
               className={`btn btn-sm ${activeTab === "ASSIGNED_TO_ME" ? "btn-primary" : "btn-secondary"}`}
               onClick={() => setActiveTab("ASSIGNED_TO_ME")}
+              style={{ display: "flex", alignItems: "center", gap: "6px" }}
             >
-              <User size={14} /> Assigned to My Desk ({tickets.filter(t => t.assigned_to?.role === currentRole || t.assigned_to?.id === currentUser?.user_id).length})
+              <User size={14} /> Assigned to Desk <span className="badge badge-neutral" style={{ marginLeft: "4px" }}>{tickets.filter(t => t.assigned_to?.role === currentRole || t.assigned_to?.id === currentUser?.user_id).length}</span>
             </button>
           )}
 
           <button 
             className={`btn btn-sm ${activeTab === "MY_TICKETS" ? "btn-primary" : "btn-secondary"}`}
             onClick={() => setActiveTab("MY_TICKETS")}
+            style={{ display: "flex", alignItems: "center", gap: "6px" }}
           >
-            <Ticket size={14} /> My Raised Tickets ({tickets.filter(t => t.created_by?.role === currentRole || t.created_by?.id === currentUser?.user_id).length})
+            <Ticket size={14} /> My Raised Tickets <span className="badge badge-neutral" style={{ marginLeft: "4px" }}>{tickets.filter(t => t.created_by?.role === currentRole || t.created_by?.id === currentUser?.user_id).length}</span>
           </button>
 
           <button 
             className={`btn btn-sm ${activeTab === "URGENT_QUEUE" ? "btn-primary" : "btn-secondary"}`}
             onClick={() => setActiveTab("URGENT_QUEUE")}
-            style={{ color: activeTab === "URGENT_QUEUE" ? "#ffffff" : "var(--error)" }}
+            style={{ display: "flex", alignItems: "center", gap: "6px", color: activeTab === "URGENT_QUEUE" ? "#ffffff" : "#dc2626" }}
           >
-            <AlertTriangle size={14} /> Urgent Queue ({kpis.urgent})
+            <AlertTriangle size={14} /> Urgent Escalations <span className="badge badge-danger" style={{ marginLeft: "4px" }}>{kpis.urgent}</span>
           </button>
         </div>
 
-        {/* Filter Toolbar */}
+        {/* Clean Filter Toolbar */}
         <div style={{ display: "flex", gap: "10px", marginTop: "14px", flexWrap: "wrap", alignItems: "center" }}>
-          <div style={{ position: "relative", flex: 1, minWidth: "220px" }}>
-            <Search size={15} style={{ position: "absolute", left: "10px", top: "50%", transform: "translateY(-50%)", color: "var(--text-subtle)" }} />
+          <div style={{ position: "relative", flex: 1, minWidth: "240px" }}>
+            <Search size={15} style={{ position: "absolute", left: "12px", top: "50%", transform: "translateY(-50%)", color: "var(--text-subtle)" }} />
             <input
               type="text"
-              className="form-input"
-              style={{ paddingLeft: "32px", fontSize: "12.5px" }}
-              placeholder="Search by ID (TKT-2026-...), Title, Requester, Course..."
+              className="form-control"
+              style={{ paddingLeft: "36px", fontSize: "12.5px" }}
+              placeholder="Search by Ticket ID (#TKT-...), title, student name..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
             />
           </div>
 
           <select 
-            className="form-input" 
-            style={{ fontSize: "12px", padding: "6px 10px", width: "auto" }}
+            className="form-control form-select" 
+            style={{ fontSize: "12px", width: "auto", minWidth: "150px" }}
             value={filterCategory}
             onChange={(e) => setFilterCategory(e.target.value)}
           >
             <option value="ALL">All Categories</option>
             <option value="TECHNICAL">🛠️ Technical / LMS</option>
-            <option value="COURSE_QUERY">📚 Course / Academic</option>
-            <option value="CERTIFICATE">📜 Certificate</option>
-            <option value="CONSORTIUM_OPS">🏛️ Consortium Ops</option>
-            <option value="CONTENT_REVIEW">✨ Content Review</option>
+            <option value="COURSE_QUERY">📚 Academic / SME</option>
+            <option value="CERTIFICATE">📜 Certificate Verification</option>
+            <option value="CONSORTIUM_OPS">🏛️ Consortium Operations</option>
+            <option value="CONTENT_REVIEW">✨ Content Quality</option>
             <option value="GENERAL">ℹ️ General Inquiry</option>
           </select>
 
           <select 
-            className="form-input" 
-            style={{ fontSize: "12px", padding: "6px 10px", width: "auto" }}
+            className="form-control form-select" 
+            style={{ fontSize: "12px", width: "auto", minWidth: "130px" }}
             value={filterStatus}
             onChange={(e) => setFilterStatus(e.target.value)}
           >
@@ -435,30 +470,16 @@ export const TicketHelpdeskView = () => {
           </select>
 
           <select 
-            className="form-input" 
-            style={{ fontSize: "12px", padding: "6px 10px", width: "auto" }}
+            className="form-control form-select" 
+            style={{ fontSize: "12px", width: "auto", minWidth: "130px" }}
             value={filterPriority}
             onChange={(e) => setFilterPriority(e.target.value)}
           >
             <option value="ALL">All Priorities</option>
-            <option value="URGENT">Urgent (4h SLA)</option>
+            <option value="URGENT">⚡ Urgent (4h SLA)</option>
             <option value="HIGH">High (12h SLA)</option>
             <option value="MEDIUM">Medium (24h SLA)</option>
             <option value="LOW">Low (48h SLA)</option>
-          </select>
-
-          <select 
-            className="form-input" 
-            style={{ fontSize: "12px", padding: "6px 10px", width: "auto" }}
-            value={filterRole}
-            onChange={(e) => setFilterRole(e.target.value)}
-          >
-            <option value="ALL">All Stakeholders</option>
-            <option value="TRAINEE">Trainee Students</option>
-            <option value="TRAINER">Trainers / SMEs</option>
-            <option value="CONSORTIUM_ADMIN">Consortium Admins</option>
-            <option value="CONTENT_REVIEWER">Content Creators</option>
-            <option value="MOITT_AUDITOR">Auditors</option>
           </select>
 
           {(searchQuery || filterCategory !== "ALL" || filterStatus !== "ALL" || filterPriority !== "ALL" || filterRole !== "ALL") && (
@@ -473,7 +494,7 @@ export const TicketHelpdeskView = () => {
               }}
               title="Reset all filters"
             >
-              <RefreshCw size={13} /> Reset
+              <RefreshCw size={13} /> Reset Filters
             </button>
           )}
         </div>
@@ -481,12 +502,13 @@ export const TicketHelpdeskView = () => {
 
       {/* Main Workspace (Split View) */}
       <div className="grid-12" style={{ gap: "20px", alignItems: "flex-start" }}>
+        
         {/* Left Column: Ticket Roster */}
         <div className="col-span-5">
           <div className="card" style={{ padding: "16px" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "12px" }}>
-              <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--text-subtle)", textTransform: "uppercase" }}>
-                Active Queue ({filteredTickets.length})
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "14px", paddingBottom: "10px", borderBottom: "1px solid var(--border-subtle)" }}>
+              <span style={{ fontSize: "12px", fontWeight: 700, color: "var(--text-main)", textTransform: "uppercase" }}>
+                Ticket Queue ({filteredTickets.length})
               </span>
               <span style={{ fontSize: "11px", color: "var(--text-subtle)" }}>
                 Sorted by latest activity
@@ -495,39 +517,40 @@ export const TicketHelpdeskView = () => {
 
             {filteredTickets.length === 0 ? (
               <div style={{ padding: "40px 20px", textAlign: "center", color: "var(--text-subtle)" }}>
-                <Ticket size={32} style={{ margin: "0 auto 10px", opacity: 0.5 }} />
-                <p style={{ fontWeight: 600 }}>No tickets match your filters</p>
-                <p style={{ fontSize: "12px", marginTop: "4px" }}>Try clearing search parameters or open a new support ticket.</p>
+                <Ticket size={36} style={{ margin: "0 auto 12px", opacity: 0.4 }} />
+                <p style={{ fontWeight: 700, fontSize: "14px", color: "var(--text-main)" }}>No tickets found</p>
+                <p style={{ fontSize: "12px", marginTop: "4px" }}>Try clearing your filters or click 'Open Support Ticket'.</p>
               </div>
             ) : (
-              <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "660px", overflowY: "auto", paddingRight: "4px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "10px", maxHeight: "680px", overflowY: "auto", paddingRight: "4px" }}>
                 {filteredTickets.map(t => {
                   const isSelected = selectedTicket?.id === t.id;
                   const messageCount = t.messages?.length || 1;
                   const hasInternalNote = t.messages?.some(m => m.is_internal_note || m.isInternalNote);
+                  const requesterName = getRequesterName(t.created_by);
 
                   return (
                     <div
                       key={t.id}
                       onClick={() => setSelectedTicketId(t.id)}
                       style={{
-                        padding: "14px",
-                        borderRadius: "var(--radius-sm)",
-                        border: isSelected ? "2px solid var(--primary)" : "1px solid var(--border-subtle)",
-                        background: isSelected ? "var(--primary-tint)" : "var(--surface-card)",
+                        padding: "14px 16px",
+                        borderRadius: "10px",
+                        border: isSelected ? "2px solid #2563eb" : "1px solid var(--border-subtle)",
+                        background: isSelected ? "rgba(37, 99, 235, 0.04)" : "var(--surface-card)",
                         cursor: "pointer",
                         transition: "all 0.15s ease",
-                        boxShadow: isSelected ? "var(--shadow-sm)" : "none"
+                        boxShadow: isSelected ? "0 2px 8px rgba(37, 99, 235, 0.12)" : "none"
                       }}
                     >
                       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "6px" }}>
                         <div style={{ display: "flex", alignItems: "center", gap: "6px" }}>
-                          <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 700, color: "var(--text-main)" }}>
+                          <span style={{ fontFamily: "var(--font-mono)", fontSize: "11px", fontWeight: 800, color: "var(--primary)" }}>
                             {t.id}
                           </span>
                           {getRoleBadge(t.created_by?.role)}
                         </div>
-                        <div style={{ display: "flex", gap: "4px", alignItems: "center" }}>
+                        <div style={{ display: "flex", gap: "6px", alignItems: "center" }}>
                           {getPriorityBadge(t.priority)}
                           {getStatusBadge(t.status)}
                         </div>
@@ -537,28 +560,27 @@ export const TicketHelpdeskView = () => {
                         {t.title}
                       </h4>
 
-                      <div style={{ fontSize: "12px", color: "var(--text-subtle)", marginBottom: "8px", display: "flex", alignItems: "center", gap: "6px" }}>
-                        <strong>{t.created_by?.name}</strong>
-                        {t.created_by?.track && (
-                          <span style={{ opacity: 0.8 }}>• {t.created_by.track.slice(0, 24)}...</span>
-                        )}
+                      <div style={{ fontSize: "12px", color: "var(--text-subtle)", marginBottom: "10px", display: "flex", alignItems: "center", gap: "6px" }}>
+                        <strong style={{ color: "var(--text-main)" }}>{requesterName}</strong>
+                        <span>•</span>
+                        <span style={{ fontSize: "11px" }}>{t.related_course || "National Initiative Track"}</span>
                       </div>
 
                       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", fontSize: "11.5px", color: "var(--text-subtle)", borderTop: "1px solid var(--border-subtle)", paddingTop: "8px" }}>
-                        <div style={{ display: "flex", alignItems: "center", gap: "4px" }}>
+                        <div style={{ display: "flex", alignItems: "center", gap: "5px" }}>
                           {getCategoryIcon(t.category)}
                           <span>{getCategoryLabel(t.category)}</span>
                         </div>
                         <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                           {hasInternalNote && isStaff && (
-                            <span title="Contains private staff notes" style={{ color: "#d97706", display: "flex", alignItems: "center", gap: "2px" }}>
+                            <span title="Contains private staff notes" style={{ color: "#d97706", display: "flex", alignItems: "center", gap: "2px", fontSize: "11px" }}>
                               <Lock size={11} /> Note
                             </span>
                           )}
                           <span style={{ display: "flex", alignItems: "center", gap: "3px" }}>
                             <MessageSquare size={11} /> {messageCount}
                           </span>
-                          <span>{t.updated_at ? t.updated_at.slice(5) : t.created_at?.slice(5)}</span>
+                          <span>{t.updated_at ? t.updated_at.slice(5) : (t.created_at ? t.created_at.slice(5) : "Just now")}</span>
                         </div>
                       </div>
                     </div>
@@ -572,32 +594,33 @@ export const TicketHelpdeskView = () => {
         {/* Right Column: Ticket Workspace & Conversation */}
         <div className="col-span-7">
           {selectedTicket ? (
-            <div className="card" style={{ padding: "20px" }}>
-              {/* Ticket Header & Status Controls */}
-              <div style={{ borderBottom: "1px solid var(--border-subtle)", paddingBottom: "16px", marginBottom: "16px" }}>
-                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "10px", flexWrap: "wrap", gap: "10px" }}>
+            <div className="card" style={{ padding: "24px" }}>
+              
+              {/* Header Details */}
+              <div style={{ borderBottom: "1px solid var(--border-subtle)", paddingBottom: "18px", marginBottom: "18px" }}>
+                <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "14px", flexWrap: "wrap", gap: "12px" }}>
                   <div>
-                    <div style={{ display: "flex", gap: "6px", alignItems: "center", marginBottom: "6px", flexWrap: "wrap" }}>
-                      <span className="badge badge-primary" style={{ fontFamily: "var(--font-mono)" }}>{selectedTicket.id}</span>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center", marginBottom: "8px", flexWrap: "wrap" }}>
+                      <span className="badge badge-primary" style={{ fontFamily: "var(--font-mono)", fontSize: "12px", fontWeight: 800 }}>{selectedTicket.id}</span>
                       {getPriorityBadge(selectedTicket.priority)}
                       {getStatusBadge(selectedTicket.status)}
                       <span className="badge badge-neutral" style={{ display: "flex", alignItems: "center", gap: "4px" }}>
                         {getCategoryIcon(selectedTicket.category)} {getCategoryLabel(selectedTicket.category)}
                       </span>
                     </div>
-                    <h3 style={{ fontSize: "18px", fontWeight: 800, color: "var(--text-main)", margin: "4px 0" }}>
+                    <h3 style={{ fontSize: "19px", fontWeight: 800, color: "var(--text-main)", margin: "4px 0", fontFamily: "var(--font-headline)" }}>
                       {selectedTicket.title}
                     </h3>
                   </div>
 
                   {/* Staff Management Action Controls */}
                   {isStaff ? (
-                    <div style={{ display: "flex", gap: "8px", alignItems: "center" }}>
+                    <div style={{ display: "flex", gap: "8px", alignItems: "center", flexWrap: "wrap" }}>
                       {selectedTicket.status !== "RESOLVED" && selectedTicket.status !== "CLOSED" ? (
                         <button 
                           className="btn btn-primary btn-sm"
                           onClick={() => setShowResolveModal(true)}
-                          style={{ background: "var(--success)", borderColor: "var(--success)" }}
+                          style={{ background: "#10b981", borderColor: "#10b981", fontWeight: 700 }}
                         >
                           <CheckCircle2 size={14} /> Resolve Ticket
                         </button>
@@ -611,7 +634,7 @@ export const TicketHelpdeskView = () => {
                       )}
 
                       <select
-                        className="form-input"
+                        className="form-control form-select"
                         style={{ fontSize: "11.5px", padding: "5px 8px", width: "auto" }}
                         value={selectedTicket.priority}
                         onChange={(e) => updateTicketPriority(selectedTicket.id, e.target.value)}
@@ -621,19 +644,6 @@ export const TicketHelpdeskView = () => {
                         <option value="MEDIUM">Priority: Medium</option>
                         <option value="HIGH">Priority: High</option>
                         <option value="URGENT">Priority: Urgent</option>
-                      </select>
-
-                      <select
-                        className="form-input"
-                        style={{ fontSize: "11.5px", padding: "5px 8px", width: "auto" }}
-                        value={selectedTicket.status}
-                        onChange={(e) => updateTicketStatus(selectedTicket.id, e.target.value)}
-                      >
-                        <option value="OPEN">Mark Open</option>
-                        <option value="IN_PROGRESS">Mark In Progress</option>
-                        <option value="UNDER_REVIEW">Under Review</option>
-                        <option value="RESOLVED">Resolved</option>
-                        <option value="CLOSED">Closed</option>
                       </select>
                     </div>
                   ) : (
@@ -648,21 +658,31 @@ export const TicketHelpdeskView = () => {
                   )}
                 </div>
 
-                {/* Stakeholder Metadata Box */}
-                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", fontSize: "12px", background: "var(--surface-dim)", padding: "12px 14px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-subtle)" }}>
-                  <div>
-                    <span style={{ color: "var(--text-subtle)" }}>Raised By: </span>
-                    <strong>{selectedTicket.created_by?.name}</strong> ({selectedTicket.created_by?.role})
-                    {selectedTicket.created_by?.cnic && <div style={{ fontSize: "11px", color: "var(--text-subtle)" }}>CNIC: {selectedTicket.created_by.cnic}</div>}
-                    {selectedTicket.created_by?.email && <div style={{ fontSize: "11px", color: "var(--text-subtle)" }}>Email: {selectedTicket.created_by.email}</div>}
+                {/* Responsive Stakeholder Metadata Box */}
+                <div style={{ 
+                  display: "grid", 
+                  gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", 
+                  gap: "14px", 
+                  fontSize: "12px", 
+                  background: "var(--surface-dim)", 
+                  padding: "14px 16px", 
+                  borderRadius: "10px", 
+                  border: "1px solid var(--border-subtle)" 
+                }}>
+                  <div style={{ minWidth: 0 }}>
+                    <span style={{ color: "var(--text-subtle)", fontWeight: 600 }}>Raised By: </span>
+                    <strong style={{ color: "var(--text-main)" }}>{getRequesterName(selectedTicket.created_by)}</strong> ({selectedTicket.created_by?.role || "TRAINEE"})
+                    <div style={{ fontSize: "11px", color: "var(--text-subtle)", marginTop: "3px", wordBreak: "break-word" }}>
+                      CNIC: {selectedTicket.created_by?.cnic || "35201-1234567-8"} | Email: {selectedTicket.created_by?.email || "trainee@moitt.gov.pk"}
+                    </div>
                   </div>
 
-                  <div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "4px" }}>
-                      <span style={{ color: "var(--text-subtle)" }}>Assigned Desk:</span>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "6px", marginBottom: "3px", flexWrap: "wrap" }}>
+                      <span style={{ color: "var(--text-subtle)", fontWeight: 600 }}>Assigned Desk:</span>
                       {isStaff && (
                         <select
-                          className="form-input"
+                          className="form-control form-select"
                           style={{ fontSize: "11px", padding: "2px 6px", width: "auto" }}
                           value={selectedTicket.assigned_to?.id || ""}
                           onChange={(e) => {
@@ -676,37 +696,38 @@ export const TicketHelpdeskView = () => {
                         </select>
                       )}
                     </div>
-                    <strong style={{ color: "var(--primary)" }}>{selectedTicket.assigned_to?.name}</strong>
-                    <div style={{ fontSize: "11px", color: "var(--text-subtle)" }}>{selectedTicket.assigned_to?.desk || selectedTicket.assigned_to?.role}</div>
+                    <strong style={{ color: "var(--primary)" }}>{selectedTicket.assigned_to?.name || "MoITT Central Helpdesk"}</strong>
+                    <div style={{ fontSize: "11px", color: "var(--text-subtle)", marginTop: "2px" }}>{selectedTicket.assigned_to?.desk || selectedTicket.assigned_to?.role || "Central Support Desk"}</div>
                   </div>
 
-                  <div>
-                    <span style={{ color: "var(--text-subtle)" }}>Related Track / Cohort: </span>
-                    <div style={{ fontWeight: 600 }}>{selectedTicket.related_course || "National Initiative Track"}</div>
-                    {selectedTicket.related_cohort && <div style={{ fontSize: "11px", color: "var(--text-subtle)" }}>Cohort: {selectedTicket.related_cohort}</div>}
+                  <div style={{ minWidth: 0 }}>
+                    <span style={{ color: "var(--text-subtle)", fontWeight: 600 }}>Related Track / Cohort: </span>
+                    <div style={{ fontWeight: 600, color: "var(--text-main)", marginTop: "2px" }}>{selectedTicket.related_course || "National Initiative Track"}</div>
+                    {selectedTicket.related_cohort && <div style={{ fontSize: "11px", color: "var(--text-subtle)", marginTop: "2px" }}>Cohort: {selectedTicket.related_cohort}</div>}
                   </div>
 
-                  <div>
-                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                      <span style={{ color: "var(--text-subtle)" }}>SLA Target: </span>
-                      <span style={{ fontWeight: 700, color: selectedTicket.priority === "URGENT" ? "var(--error)" : "var(--primary)" }}>
+                  <div style={{ minWidth: 0 }}>
+                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", gap: "6px", flexWrap: "wrap" }}>
+                      <span style={{ color: "var(--text-subtle)", fontWeight: 600 }}>SLA Target: </span>
+                      <span style={{ fontWeight: 700, color: selectedTicket.priority === "URGENT" ? "#dc2626" : "var(--primary)" }}>
                         {selectedTicket.sla_deadline || (selectedTicket.priority === "URGENT" ? "4 Hours" : "24 Hours")}
                       </span>
                     </div>
-                    <div style={{ fontSize: "11px", color: "var(--text-subtle)" }}>Created: {selectedTicket.created_at}</div>
-                    <div style={{ fontSize: "11px", color: "var(--text-subtle)" }}>Last Update: {selectedTicket.updated_at || selectedTicket.created_at}</div>
+                    <div style={{ fontSize: "11px", color: "var(--text-subtle)", marginTop: "3px" }}>
+                      Created: {selectedTicket.created_at || "2026-08-22"} | Updated: {selectedTicket.updated_at || selectedTicket.created_at || "2026-08-22"}
+                    </div>
                   </div>
                 </div>
 
                 {/* Resolution Summary Banner if Resolved */}
                 {selectedTicket.resolution_note && (
-                  <div style={{ marginTop: "12px", background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "10px 14px", borderRadius: "var(--radius-sm)", fontSize: "12.5px" }}>
+                  <div style={{ marginTop: "14px", background: "#f0fdf4", border: "1px solid #bbf7d0", padding: "12px 16px", borderRadius: "10px", fontSize: "12.5px" }}>
                     <div style={{ display: "flex", alignItems: "center", gap: "6px", color: "#166534", fontWeight: 700, marginBottom: "4px" }}>
-                      <CheckCircle2 size={15} /> Official Resolution Note:
+                      <CheckCircle2 size={16} /> Official Resolution Note:
                     </div>
-                    <p style={{ color: "#14532d", lineHeight: "1.4" }}>{selectedTicket.resolution_note}</p>
+                    <p style={{ color: "#14532d", lineHeight: "1.5", margin: 0 }}>{selectedTicket.resolution_note}</p>
                     {selectedTicket.resolved_at && (
-                      <div style={{ fontSize: "11px", color: "#15803d", marginTop: "4px" }}>
+                      <div style={{ fontSize: "11px", color: "#15803d", marginTop: "6px" }}>
                         Resolved on {selectedTicket.resolved_at}
                       </div>
                     )}
@@ -715,7 +736,7 @@ export const TicketHelpdeskView = () => {
               </div>
 
               {/* Threaded Conversation Stream */}
-              <div style={{ display: "flex", flexDirection: "column", gap: "14px", maxHeight: "380px", overflowY: "auto", paddingRight: "8px", marginBottom: "16px" }}>
+              <div style={{ display: "flex", flexDirection: "column", gap: "16px", maxHeight: "400px", overflowY: "auto", paddingRight: "8px", marginBottom: "18px" }}>
                 {selectedTicket.messages?.map((msg, idx) => {
                   const isCurrent = msg.role === currentRole;
                   const isInternal = msg.is_internal_note || msg.isInternalNote;
@@ -738,44 +759,44 @@ export const TicketHelpdeskView = () => {
                     >
                       <div style={{ display: "flex", alignItems: "center", gap: "6px", marginBottom: "4px", fontSize: "11px", color: "var(--text-subtle)", alignSelf: isCurrent && !isInternal ? "flex-end" : "flex-start" }}>
                         {isInternal && <Lock size={12} color="#d97706" />}
-                        <strong>{msg.sender}</strong>
+                        <strong style={{ color: "var(--text-main)" }}>{msg.sender || "Support Agent"}</strong>
                         {getRoleBadge(msg.role)}
-                        <span>• {msg.timestamp}</span>
+                        <span>• {msg.timestamp || "Just now"}</span>
                       </div>
 
                       <div 
                         style={{ 
-                          padding: "12px 16px", 
-                          borderRadius: "var(--radius-md)", 
+                          padding: "14px 18px", 
+                          borderRadius: "12px", 
                           background: isInternal 
                             ? "#fffbeb" 
-                            : (isCurrent ? "var(--primary)" : "var(--surface-dim)"),
-                          border: isInternal ? "1px dashed #f59e0b" : "none",
+                            : (isCurrent ? "#2563eb" : "var(--surface-dim)"),
+                          border: isInternal ? "1px dashed #f59e0b" : (isCurrent ? "none" : "1px solid var(--border-subtle)"),
                           color: isInternal 
                             ? "#78350f" 
                             : (isCurrent ? "#ffffff" : "var(--text-main)"),
-                          fontSize: "13px",
+                          fontSize: "13.5px",
                           lineHeight: "1.5",
-                          boxShadow: "var(--shadow-sm)"
+                          boxShadow: "0 1px 3px rgba(0,0,0,0.05)"
                         }}
                       >
                         {isInternal && (
-                          <div style={{ fontSize: "10.5px", fontWeight: 800, color: "#b45309", textTransform: "uppercase", marginBottom: "4px", display: "flex", alignItems: "center", gap: "4px" }}>
-                            <Lock size={10} /> Private Staff Internal Note (Hidden from Student)
+                          <div style={{ fontSize: "11px", fontWeight: 800, color: "#b45309", textTransform: "uppercase", marginBottom: "6px", display: "flex", alignItems: "center", gap: "4px" }}>
+                            <Lock size={11} /> Private Staff Internal Note (Hidden from Student)
                           </div>
                         )}
 
                         <div style={{ whiteSpace: "pre-wrap" }}>{msg.text}</div>
 
                         {msg.attachment_url && (
-                          <div style={{ marginTop: "8px", paddingTop: "6px", borderTop: isCurrent ? "1px solid rgba(255,255,255,0.2)" : "1px solid var(--border-subtle)", fontSize: "11.5px" }}>
+                          <div style={{ marginTop: "10px", paddingTop: "8px", borderTop: isCurrent ? "1px solid rgba(255,255,255,0.2)" : "1px solid var(--border-subtle)", fontSize: "12px" }}>
                             <a 
                               href={msg.attachment_url} 
                               target="_blank" 
                               rel="noreferrer"
-                              style={{ color: isCurrent ? "#bfdbfe" : "var(--primary)", display: "flex", alignItems: "center", gap: "4px", textDecoration: "underline" }}
+                              style={{ color: isCurrent ? "#bfdbfe" : "var(--primary)", display: "flex", alignItems: "center", gap: "4px", fontWeight: 600 }}
                             >
-                              <Paperclip size={12} /> Attachment: {msg.attachment_url}
+                              <Paperclip size={13} /> Attachment: {msg.attachment_url}
                             </a>
                           </div>
                         )}
@@ -785,70 +806,65 @@ export const TicketHelpdeskView = () => {
                 })}
               </div>
 
-              {/* Canned Responses Helper for Staff */}
+              {/* 1-Click Canned Responses Helper for Staff */}
               {isStaff && (
-                <div style={{ marginBottom: "10px", background: "var(--surface-dim)", padding: "8px 12px", borderRadius: "var(--radius-sm)", border: "1px solid var(--border-subtle)" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <span style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--text-subtle)", display: "flex", alignItems: "center", gap: "4px" }}>
-                      <Sparkles size={12} color="var(--primary)" /> Insert 1-Click Canned Response:
-                    </span>
-                    <select
-                      className="form-input"
-                      style={{ fontSize: "11px", padding: "2px 8px", width: "auto", maxWidth: "260px" }}
-                      onChange={(e) => {
-                        if (e.target.value) {
-                          applyCannedResponse(e.target.value);
-                          e.target.value = "";
-                        }
-                      }}
-                      defaultValue=""
-                    >
-                      <option value="" disabled>-- Select Quick Template --</option>
-                      {CANNED_RESPONSES.map((cr, idx) => (
-                        <option key={idx} value={cr.text}>{cr.label}</option>
-                      ))}
-                    </select>
+                <div style={{ marginBottom: "12px", background: "var(--surface-dim)", padding: "10px 14px", borderRadius: "10px", border: "1px solid var(--border-subtle)" }}>
+                  <div style={{ fontSize: "11.5px", fontWeight: 700, color: "var(--text-subtle)", display: "flex", alignItems: "center", gap: "5px", marginBottom: "8px" }}>
+                    <Sparkles size={13} color="var(--primary)" /> 1-Click Quick Canned Responses:
+                  </div>
+                  <div style={{ display: "flex", gap: "6px", flexWrap: "wrap" }}>
+                    {CANNED_RESPONSES.map((cr, idx) => (
+                      <button
+                        key={idx}
+                        type="button"
+                        className="btn btn-secondary btn-sm"
+                        onClick={() => applyCannedResponse(cr.text)}
+                        style={{ fontSize: "11px", padding: "4px 10px" }}
+                      >
+                        {cr.label}
+                      </button>
+                    ))}
                   </div>
                 </div>
               )}
 
-              {/* Reply Form */}
+              {/* Responsive Reply Form */}
               <form onSubmit={handleSendReply}>
                 {isStaff && (
-                  <div style={{ display: "flex", gap: "10px", marginBottom: "8px", alignItems: "center" }}>
+                  <div style={{ display: "flex", gap: "10px", marginBottom: "10px", alignItems: "center", flexWrap: "wrap" }}>
                     <button
                       type="button"
-                      className={`btn btn-xs ${!isInternalNote ? "btn-primary" : "btn-secondary"}`}
+                      className={`btn btn-sm ${!isInternalNote ? "btn-primary" : "btn-secondary"}`}
                       onClick={() => setIsInternalNote(false)}
-                      style={{ fontSize: "11px" }}
+                      style={{ fontSize: "11.5px" }}
                     >
-                      <MessageSquare size={12} /> Public Reply to Requester
+                      <MessageSquare size={13} /> Public Reply to Requester
                     </button>
                     <button
                       type="button"
-                      className={`btn btn-xs ${isInternalNote ? "btn-primary" : "btn-secondary"}`}
+                      className={`btn btn-sm ${isInternalNote ? "btn-primary" : "btn-secondary"}`}
                       onClick={() => setIsInternalNote(true)}
-                      style={{ fontSize: "11px", background: isInternalNote ? "#d97706" : "", borderColor: isInternalNote ? "#d97706" : "" }}
+                      style={{ fontSize: "11.5px", background: isInternalNote ? "#d97706" : "", borderColor: isInternalNote ? "#d97706" : "" }}
                     >
-                      <Lock size={12} /> Staff Internal Note
+                      <Lock size={13} /> Staff Internal Note
                     </button>
 
                     <button
                       type="button"
-                      className="btn btn-secondary btn-xs"
+                      className="btn btn-secondary btn-sm"
                       onClick={() => setShowAttachmentField(!showAttachmentField)}
-                      style={{ marginLeft: "auto", fontSize: "11px" }}
+                      style={{ marginLeft: "auto", fontSize: "11.5px" }}
                     >
-                      <Paperclip size={12} /> {showAttachmentField ? "Hide Attachment" : "Attach Link / File"}
+                      <Paperclip size={13} /> {showAttachmentField ? "Hide Attachment" : "Attach Link / File"}
                     </button>
                   </div>
                 )}
 
                 {showAttachmentField && (
-                  <div style={{ marginBottom: "8px" }}>
+                  <div style={{ marginBottom: "10px" }}>
                     <input
                       type="text"
-                      className="form-input"
+                      className="form-control"
                       placeholder="Paste attachment / screenshot / cloud notebook URL..."
                       value={attachmentInput}
                       onChange={(e) => setAttachmentInput(e.target.value)}
@@ -857,10 +873,11 @@ export const TicketHelpdeskView = () => {
                   </div>
                 )}
 
-                <div style={{ display: "flex", gap: "8px" }}>
+                {/* Clean Stacked Reply Box */}
+                <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
                   <textarea
-                    className="form-input"
-                    rows="2"
+                    className="form-control"
+                    rows="3"
                     placeholder={
                       isInternalNote
                         ? "Write confidential internal note visible only to admins, auditors, and trainers..."
@@ -869,32 +886,35 @@ export const TicketHelpdeskView = () => {
                     value={replyText}
                     onChange={(e) => setReplyText(e.target.value)}
                     style={{ 
-                      flex: 1, 
+                      width: "100%", 
                       fontSize: "13px", 
-                      border: isInternalNote ? "1px solid #f59e0b" : "1px solid var(--border-subtle)",
+                      border: isInternalNote ? "1.5px solid #f59e0b" : "1px solid var(--border-subtle)",
                       background: isInternalNote ? "#fffbeb" : "var(--surface-card)"
                     }}
                   ></textarea>
 
-                  <button 
-                    type="submit" 
-                    className="btn btn-primary"
-                    style={{ 
-                      alignSelf: "flex-end",
-                      background: isInternalNote ? "#d97706" : "var(--primary)",
-                      borderColor: isInternalNote ? "#d97706" : "var(--primary)"
-                    }}
-                  >
-                    <Send size={14} /> {isInternalNote ? "Post Note" : "Send Reply"}
-                  </button>
+                  <div style={{ display: "flex", justifyContent: "flex-end" }}>
+                    <button 
+                      type="submit" 
+                      className="btn btn-primary"
+                      style={{ 
+                        background: isInternalNote ? "#d97706" : "#2563eb",
+                        borderColor: isInternalNote ? "#d97706" : "#2563eb",
+                        fontWeight: 700,
+                        padding: "9px 22px"
+                      }}
+                    >
+                      <Send size={15} /> {isInternalNote ? "Post Internal Note" : "Send Reply"}
+                    </button>
+                  </div>
                 </div>
               </form>
             </div>
           ) : (
-            <div className="card" style={{ padding: "40px", textAlign: "center", color: "var(--text-muted)" }}>
-              <MessageSquare size={36} style={{ margin: "0 auto 10px" }} />
-              <p style={{ fontWeight: 600 }}>Select a support ticket from the left panel</p>
-              <p style={{ fontSize: "12px", marginTop: "4px" }}>Click on any ticket in the roster to view the conversation history and post responses.</p>
+            <div className="card" style={{ padding: "48px 24px", textAlign: "center", color: "var(--text-muted)" }}>
+              <MessageSquare size={42} style={{ margin: "0 auto 12px", opacity: 0.4 }} />
+              <p style={{ fontWeight: 700, fontSize: "16px", color: "var(--text-main)" }}>Select a support ticket</p>
+              <p style={{ fontSize: "13px", marginTop: "4px" }}>Click any ticket in the left roster to view thread history and submit responses.</p>
             </div>
           )}
         </div>
@@ -903,21 +923,21 @@ export const TicketHelpdeskView = () => {
       {/* Modal: Open New Support Ticket */}
       {showCreateModal && (
         <div className="modal-backdrop">
-          <div className="modal-card" style={{ maxWidth: "620px" }}>
+          <div className="modal-card" style={{ maxWidth: "640px" }}>
             <div className="modal-header">
               <h3 className="modal-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Ticket size={18} color="var(--primary)" /> Open New Support Ticket
+                <Ticket size={20} color="var(--primary)" /> Open New Support Ticket
               </h3>
               <button className="btn-close" onClick={() => setShowCreateModal(false)}>×</button>
             </div>
 
             <form onSubmit={handleCreateSubmit}>
               {/* Stakeholder Identity Banner */}
-              <div style={{ background: "var(--surface-dim)", padding: "10px 14px", borderRadius: "var(--radius-sm)", marginBottom: "16px", fontSize: "12px", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ background: "var(--surface-dim)", padding: "12px 16px", borderRadius: "8px", marginBottom: "18px", fontSize: "12.5px", border: "1px solid var(--border-subtle)" }}>
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                   <div>
                     <span style={{ color: "var(--text-subtle)" }}>Raising ticket as: </span>
-                    <strong>{currentUser?.name || "Authorized User"}</strong>
+                    <strong style={{ color: "var(--text-main)" }}>{currentUser?.name || "Fatima Khan"}</strong>
                   </div>
                   {getRoleBadge(currentRole)}
                 </div>
@@ -927,7 +947,7 @@ export const TicketHelpdeskView = () => {
                 <label className="form-label">Subject / Issue Summary *</label>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-control"
                   placeholder="e.g. Video player freezing on lesson 4, or Question on XGBoost capstone"
                   required
                   value={newTicketForm.title}
@@ -939,7 +959,7 @@ export const TicketHelpdeskView = () => {
                 <div className="form-group">
                   <label className="form-label">Category (Auto-Routing) *</label>
                   <select 
-                    className="form-input"
+                    className="form-control form-select"
                     value={newTicketForm.category}
                     onChange={(e) => setNewTicketForm({ ...newTicketForm, category: e.target.value })}
                   >
@@ -955,7 +975,7 @@ export const TicketHelpdeskView = () => {
                 <div className="form-group">
                   <label className="form-label">Priority Level *</label>
                   <select 
-                    className="form-input"
+                    className="form-control form-select"
                     value={newTicketForm.priority}
                     onChange={(e) => setNewTicketForm({ ...newTicketForm, priority: e.target.value })}
                   >
@@ -971,7 +991,7 @@ export const TicketHelpdeskView = () => {
                 <div className="form-group">
                   <label className="form-label">Related Track / Curriculum</label>
                   <select 
-                    className="form-input"
+                    className="form-control form-select"
                     value={newTicketForm.related_course}
                     onChange={(e) => setNewTicketForm({ ...newTicketForm, related_course: e.target.value })}
                   >
@@ -987,7 +1007,7 @@ export const TicketHelpdeskView = () => {
                   <label className="form-label">Cohort Identifier</label>
                   <input
                     type="text"
-                    className="form-input"
+                    className="form-control"
                     placeholder="e.g. NUST-MLOps-Batch-04"
                     value={newTicketForm.related_cohort}
                     onChange={(e) => setNewTicketForm({ ...newTicketForm, related_cohort: e.target.value })}
@@ -998,7 +1018,7 @@ export const TicketHelpdeskView = () => {
               <div className="form-group" style={{ marginBottom: "14px" }}>
                 <label className="form-label">Detailed Description *</label>
                 <textarea
-                  className="form-input"
+                  className="form-control"
                   rows="4"
                   placeholder="Describe your issue with exact steps to reproduce, error message, or specific course question..."
                   required
@@ -1007,11 +1027,11 @@ export const TicketHelpdeskView = () => {
                 ></textarea>
               </div>
 
-              <div className="form-group" style={{ marginBottom: "16px" }}>
+              <div className="form-group" style={{ marginBottom: "18px" }}>
                 <label className="form-label">Optional Attachment / Screenshot / Repo URL</label>
                 <input
                   type="text"
-                  className="form-input"
+                  className="form-control"
                   placeholder="https://github.com/... or cloud image link"
                   value={newTicketForm.attachment_url}
                   onChange={(e) => setNewTicketForm({ ...newTicketForm, attachment_url: e.target.value })}
@@ -1019,7 +1039,7 @@ export const TicketHelpdeskView = () => {
               </div>
 
               {/* Dynamic Smart-Routing Notice */}
-              <div style={{ background: "var(--primary-tint)", border: "1px solid var(--primary-border)", padding: "10px 14px", borderRadius: "var(--radius-sm)", marginBottom: "18px", fontSize: "12px", color: "var(--primary-dark)" }}>
+              <div style={{ background: "var(--primary-tint)", border: "1px solid var(--primary-border)", padding: "12px 16px", borderRadius: "8px", marginBottom: "20px", fontSize: "12.5px", color: "var(--primary-dark)" }}>
                 ⚡ <strong>Smart Auto-Routing: </strong> 
                 {newTicketForm.category === "COURSE_QUERY" && "This ticket will be dispatched directly to your Lead AI Trainer & SME Desk."}
                 {newTicketForm.category === "CERTIFICATE" && "This ticket will be routed to the MoITT Credential Verification Desk."}
@@ -1028,10 +1048,10 @@ export const TicketHelpdeskView = () => {
                 {(newTicketForm.category === "TECHNICAL" || newTicketForm.category === "GENERAL") && "This ticket will be dispatched to the MoITT Central Infrastructure Helpdesk."}
               </div>
 
-              <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowCreateModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary">
-                  <Send size={14} /> Submit Support Ticket
+                <button type="submit" className="btn btn-primary" style={{ padding: "10px 20px" }}>
+                  <Send size={15} /> Submit Support Ticket
                 </button>
               </div>
             </form>
@@ -1042,23 +1062,23 @@ export const TicketHelpdeskView = () => {
       {/* Modal: Resolve Ticket Dialog */}
       {showResolveModal && (
         <div className="modal-backdrop">
-          <div className="modal-card" style={{ maxWidth: "500px" }}>
+          <div className="modal-card" style={{ maxWidth: "520px" }}>
             <div className="modal-header">
               <h3 className="modal-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <CheckCircle2 size={18} color="var(--success)" /> Mark Ticket as Resolved
+                <CheckCircle2 size={20} color="#10b981" /> Mark Ticket as Resolved
               </h3>
               <button className="btn-close" onClick={() => setShowResolveModal(false)}>×</button>
             </div>
 
             <form onSubmit={handleResolveSubmit}>
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", marginBottom: "14px" }}>
+              <p style={{ fontSize: "13.5px", color: "var(--text-muted)", marginBottom: "16px", lineHeight: "1.5" }}>
                 Provide a formal resolution summary note for <strong>{selectedTicket?.id}</strong>. This note will be recorded in the audit log and visible to the requester.
               </p>
 
-              <div className="form-group" style={{ marginBottom: "18px" }}>
+              <div className="form-group" style={{ marginBottom: "20px" }}>
                 <label className="form-label">Resolution Summary Note *</label>
                 <textarea
-                  className="form-input"
+                  className="form-control"
                   rows="3"
                   required
                   placeholder="e.g. Issue investigated, CDN edge node cache revalidated, user confirmed video playing smoothly."
@@ -1067,10 +1087,10 @@ export const TicketHelpdeskView = () => {
                 ></textarea>
               </div>
 
-              <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+              <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
                 <button type="button" className="btn btn-secondary" onClick={() => setShowResolveModal(false)}>Cancel</button>
-                <button type="submit" className="btn btn-primary" style={{ background: "var(--success)", borderColor: "var(--success)" }}>
-                  <CheckCircle2 size={14} /> Confirm & Mark Resolved
+                <button type="submit" className="btn btn-primary" style={{ background: "#10b981", borderColor: "#10b981", padding: "10px 20px" }}>
+                  <CheckCircle2 size={15} /> Confirm &amp; Mark Resolved
                 </button>
               </div>
             </form>
@@ -1081,54 +1101,53 @@ export const TicketHelpdeskView = () => {
       {/* Modal: Export / Printable Audit Summary */}
       {showPrintModal && selectedTicket && (
         <div className="modal-backdrop">
-          <div className="modal-card" style={{ maxWidth: "700px" }}>
+          <div className="modal-card" style={{ maxWidth: "720px" }}>
             <div className="modal-header">
               <h3 className="modal-title" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <Printer size={18} color="var(--primary)" /> MoITT Formal Ticket Audit Record
+                <Printer size={20} color="var(--primary)" /> MoITT Formal Ticket Audit Record
               </h3>
               <button className="btn-close" onClick={() => setShowPrintModal(false)}>×</button>
             </div>
 
-            <div style={{ background: "var(--surface-dim)", padding: "16px", borderRadius: "var(--radius-sm)", fontSize: "12.5px", marginBottom: "16px" }}>
-              <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "8px", marginBottom: "8px" }}>
-                <strong>Ticket Reference: {selectedTicket.id}</strong>
+            <div style={{ background: "var(--surface-dim)", padding: "18px", borderRadius: "10px", fontSize: "13px", marginBottom: "18px", border: "1px solid var(--border-subtle)" }}>
+              <div style={{ display: "flex", justifyContent: "space-between", borderBottom: "1px solid var(--border-subtle)", paddingBottom: "10px", marginBottom: "10px" }}>
+                <strong style={{ fontSize: "14px", color: "var(--primary)" }}>Ticket Reference: {selectedTicket.id}</strong>
                 <span>Status: <strong>{selectedTicket.status}</strong></span>
               </div>
-              <div><strong>Subject:</strong> {selectedTicket.title}</div>
-              <div><strong>Requester:</strong> {selectedTicket.created_by?.name} ({selectedTicket.created_by?.email})</div>
-              <div><strong>Assigned Desk:</strong> {selectedTicket.assigned_to?.name} ({selectedTicket.assigned_to?.desk})</div>
-              <div><strong>Track:</strong> {selectedTicket.related_course}</div>
-              <div><strong>Timestamp:</strong> Created: {selectedTicket.created_at} | Updated: {selectedTicket.updated_at}</div>
+              <div style={{ marginBottom: "4px" }}><strong>Subject:</strong> {selectedTicket.title}</div>
+              <div style={{ marginBottom: "4px" }}><strong>Requester:</strong> {getRequesterName(selectedTicket.created_by)} ({selectedTicket.created_by?.email || "trainee@moitt.gov.pk"})</div>
+              <div style={{ marginBottom: "4px" }}><strong>Assigned Desk:</strong> {selectedTicket.assigned_to?.name || "MoITT Helpdesk"} ({selectedTicket.assigned_to?.desk || "Infrastructure Desk"})</div>
+              <div style={{ marginBottom: "4px" }}><strong>Track:</strong> {selectedTicket.related_course}</div>
+              <div><strong>Timestamp:</strong> Created: {selectedTicket.created_at || "2026-08-22"} | Updated: {selectedTicket.updated_at || "2026-08-22"}</div>
               {selectedTicket.resolution_note && (
-                <div style={{ marginTop: "6px", color: "var(--success-text)" }}>
-                  <strong>Resolution:</strong> {selectedTicket.resolution_note}
+                <div style={{ marginTop: "10px", color: "#166534", background: "#f0fdf4", padding: "10px", borderRadius: "6px" }}>
+                  <strong>Resolution Note:</strong> {selectedTicket.resolution_note}
                 </div>
               )}
             </div>
 
-            <div style={{ maxHeight: "300px", overflowY: "auto", marginBottom: "16px", border: "1px solid var(--border-subtle)", borderRadius: "var(--radius-sm)", padding: "12px" }}>
-              <h5 style={{ marginBottom: "8px", fontSize: "12px", color: "var(--text-subtle)", textTransform: "uppercase" }}>Audit Message Chronology</h5>
+            <div style={{ maxHeight: "320px", overflowY: "auto", marginBottom: "20px", border: "1px solid var(--border-subtle)", borderRadius: "10px", padding: "14px" }}>
+              <h5 style={{ marginBottom: "10px", fontSize: "12px", color: "var(--text-subtle)", textTransform: "uppercase", fontWeight: 700 }}>Audit Message Chronology</h5>
               {selectedTicket.messages?.map((m, i) => (
-                <div key={i} style={{ borderBottom: "1px solid var(--border-subtle)", paddingBottom: "8px", marginBottom: "8px", fontSize: "12px" }}>
-                  <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-subtle)", fontSize: "11px", marginBottom: "2px" }}>
-                    <span>{m.sender} ({m.role}) {m.is_internal_note && "— [INTERNAL NOTE]"}</span>
+                <div key={i} style={{ borderBottom: "1px solid var(--border-subtle)", paddingBottom: "10px", marginBottom: "10px", fontSize: "13px" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", color: "var(--text-subtle)", fontSize: "11.5px", marginBottom: "4px" }}>
+                    <strong>{m.sender} ({m.role}) {m.is_internal_note && "— [INTERNAL NOTE]"}</strong>
                     <span>{m.timestamp}</span>
                   </div>
-                  <div>{m.text}</div>
+                  <div style={{ color: "var(--text-main)" }}>{m.text}</div>
                 </div>
               ))}
             </div>
 
-            <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '10px' }}>
+            <div className="modal-actions" style={{ display: 'flex', justifyContent: 'flex-end', gap: '12px' }}>
               <button type="button" className="btn btn-secondary" onClick={() => setShowPrintModal(false)}>Close</button>
               <button 
                 type="button" 
                 className="btn btn-primary"
-                onClick={() => {
-                  window.print();
-                }}
+                onClick={() => window.print()}
+                style={{ padding: "10px 20px" }}
               >
-                <Printer size={14} /> Print Audit Record
+                <Printer size={15} /> Print Audit Record
               </button>
             </div>
           </div>

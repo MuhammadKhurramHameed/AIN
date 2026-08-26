@@ -15,9 +15,18 @@ export const TimedAssessmentView = () => {
     { id: "q3", title: "3. In Retrieval-Augmented Generation (RAG), what is the function of the vector database?", options: ["Store static HTML web pages", "Retrieve semantically similar context embeddings for LLM prompt augmentation", "Compile Python C-extensions", "Run Docker containers"] }
   ];
 
+  const [errorMessage, setErrorMessage] = useState('');
+
   const handleSubmit = async () => {
+    setErrorMessage('');
+    const answeredCount = Object.keys(answers).length;
+    if (answeredCount < questions.length) {
+      setErrorMessage(`Please answer all ${questions.length} questions before submitting (currently answered ${answeredCount}/${questions.length}).`);
+      return;
+    }
+
     setIsSubmitting(true);
-    const score = Object.keys(answers).length >= 2 ? 3 : 1; // Example score calc
+    const score = 3; // All 3 answered
 
     const res = await apiService.submitAssessment({
       traineeCnic: '35201-1122334-6',
@@ -50,6 +59,11 @@ export const TimedAssessmentView = () => {
 
         {!result ? (
           <div>
+            {errorMessage && (
+              <div style={{ background: "#fef2f2", border: "1px solid #fca5a5", color: "#991b1b", padding: "10px 14px", borderRadius: "8px", fontSize: "12px", marginBottom: "16px" }}>
+                ⚠️ {errorMessage}
+              </div>
+            )}
             {questions.map((q, idx) => (
               <div key={q.id} style={{ marginBottom: "20px", padding: "16px", background: "var(--surface-dim)", borderRadius: "var(--radius-md)" }}>
                 <h5 style={{ fontFamily: "var(--font-headline)", fontWeight: 700, marginBottom: "12px" }}>{q.title}</h5>

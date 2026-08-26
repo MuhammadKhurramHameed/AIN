@@ -27,7 +27,7 @@ export const LandingPageView = () => {
         <div style={{ maxWidth: "1280px", margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
           <div style={{ display: "flex", alignItems: "center", gap: "32px" }}>
             <a href="#" style={{ fontFamily: "var(--font-headline)", fontSize: "22px", fontWeight: 800, color: "#1d4ed8", textDecoration: "none" }}>
-              Synapse LMS
+              AIN LMS
             </a>
             <div style={{ display: "flex", gap: "24px", fontSize: "13.5px", fontWeight: 600, color: "#475569" }}>
               <a href="#curriculum" style={{ color: "inherit", textDecoration: "none" }}>Curriculum Tracks</a>
@@ -38,10 +38,10 @@ export const LandingPageView = () => {
 
           <div style={{ display: "flex", gap: "12px", alignItems: "center" }}>
             <button onClick={() => navigateTo("sign-in")} className="btn btn-secondary btn-sm">
-              Institutional Sign In
+              Sign In
             </button>
-            <button onClick={() => navigateTo("sign-in")} className="btn btn-primary btn-sm">
-              Launch Portal
+            <button onClick={() => navigateTo("sign-up")} className="btn btn-primary btn-sm" style={{ fontWeight: 700 }}>
+              Create Account
             </button>
           </div>
         </div>
@@ -66,17 +66,24 @@ export const LandingPageView = () => {
 
             <div className="stitch-badge-quota">
               <span className="material-symbols-outlined text-emerald-600" style={{ fontVariationSettings: "'FILL' 1", color: "#16a34a" }}>verified</span>
-              <span>✨ Verified ≥ 30% Female Quota Enforced</span>
+              <span>✨ Nationwide Accreditation &amp; Hands-on Python AI Labs</span>
             </div>
 
             <div style={{ display: "flex", gap: "16px", flexWrap: "wrap", marginTop: "8px" }}>
               <button
-                onClick={() => navigateTo("public-intake")}
+                onClick={() => navigateTo("sign-up")}
                 className="btn btn-primary btn-lg"
+                style={{ display: "inline-flex", alignItems: "center", gap: "8px", fontWeight: 800 }}
+              >
+                Create Free Account
+                <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
+              </button>
+              <button
+                onClick={() => navigateTo("public-intake")}
+                className="btn btn-secondary btn-lg"
                 style={{ display: "inline-flex", alignItems: "center", gap: "8px" }}
               >
-                Explore Curriculum Tracks
-                <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
+                Public Intake Portal
               </button>
               <button
                 onClick={() => navigateTo("authenticator")}
@@ -165,7 +172,7 @@ export const LandingPageView = () => {
                 <span className="material-symbols-outlined" style={{ fontSize: "32px", fontVariationSettings: "'FILL' 1" }}>verified_user</span>
               </div>
               <h4 style={{ fontFamily: "var(--font-headline)", fontWeight: 800, fontSize: "18px", color: "#0f172a", marginBottom: "4px" }}>Ed25519 Root Signed</h4>
-              <p style={{ fontSize: "12px", color: "var(--text-subtle)", marginBottom: "16px" }}>MOITT Ministry Cryptographic Trust Chain</p>
+              <p style={{ fontSize: "12px", color: "var(--text-subtle)", marginBottom: "16px" }}>AIN National Cryptographic Trust Chain</p>
               <div style={{ display: "flex", justifyContent: "center", gap: "6px", fontSize: "11px", fontFamily: "var(--font-mono)" }}>
                 <span className="badge badge-primary">SHA-256</span>
                 <span className="badge badge-success">VALID</span>
@@ -262,14 +269,14 @@ export const LandingPageView = () => {
         <footer style={{ borderTop: "1px solid #e2e8f0", paddingTop: "32px", paddingBottom: "32px" }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: "16px" }}>
             <div>
-              <div style={{ fontFamily: "var(--font-headline)", fontWeight: 800, fontSize: "18px", color: "#0f172a" }}>Synapse LMS</div>
-              <p style={{ fontSize: "12px", color: "var(--text-subtle)", marginTop: "4px" }}>© 2026 National AI Advancement Initiative. Managed by Synapse Consortium.</p>
+              <div style={{ fontFamily: "var(--font-headline)", fontWeight: 800, fontSize: "18px", color: "#0f172a" }}>AIN LMS</div>
+              <p style={{ fontSize: "12px", color: "var(--text-subtle)", marginTop: "4px" }}>© 2026 National AI Advancement Initiative. Managed by AIN Consortium.</p>
             </div>
             <div style={{ display: "flex", gap: "20px", fontSize: "12px", color: "var(--text-muted)" }}>
-              <a href="#" style={{ color: "inherit", textDecoration: "none" }}>Security Protocol</a>
-              <a href="#" style={{ color: "inherit", textDecoration: "none" }}>Credential Verification</a>
-              <a href="#" style={{ color: "inherit", textDecoration: "none" }}>Governance</a>
-              <a href="#" style={{ color: "inherit", textDecoration: "none" }}>Privacy Policy</a>
+              <button onClick={() => navigateTo("security")} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", fontSize: "12px" }}>Security Protocol</button>
+              <button onClick={() => navigateTo("authenticator")} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", fontSize: "12px" }}>Credential Verification</button>
+              <button onClick={() => navigateTo("trainer-register")} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", fontSize: "12px" }}>Trainer Application</button>
+              <button onClick={() => navigateTo("sign-in")} style={{ background: "none", border: "none", color: "inherit", cursor: "pointer", fontSize: "12px" }}>Sign In Portal</button>
             </div>
           </div>
         </footer>

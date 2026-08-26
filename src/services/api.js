@@ -12,6 +12,35 @@ export const apiService = {
     }
   },
 
+  // Authentication & Sign Up
+  async signup(accountData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/signup`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(accountData)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] signup error:', err.message);
+      return null;
+    }
+  },
+
+  async login(credentials) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(credentials)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] login error:', err.message);
+      return null;
+    }
+  },
+
   // Programme Summary KPIs
   async getProgrammeSummary() {
     try {
@@ -277,5 +306,82 @@ export const apiService = {
       console.warn('[API Service] getAuditLogs error:', err.message);
       return null;
     }
+  },
+
+  // Report Schedules & Automated Email Dispatch
+  async getReportSchedules() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reports/schedules`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] getReportSchedules error:', err.message);
+      return null;
+    }
+  },
+
+  async saveReportSchedule(scheduleData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reports/schedules`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(scheduleData)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] saveReportSchedule error:', err.message);
+      return null;
+    }
+  },
+
+  async deleteReportSchedule(scheduleId) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reports/schedules/${scheduleId}`, {
+        method: 'DELETE'
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] deleteReportSchedule error:', err.message);
+      return null;
+    }
+  },
+
+  async sendReportEmail(emailPayload) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reports/send-email`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(emailPayload)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] sendReportEmail error:', err.message);
+      return null;
+    }
+  },
+
+  // SMTP Settings
+  async getSmtpConfig() {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reports/smtp-config`);
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] getSmtpConfig error:', err.message);
+      return null;
+    }
+  },
+
+  async saveSmtpConfig(configData) {
+    try {
+      const res = await fetch(`${API_BASE_URL}/reports/smtp-config`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(configData)
+      });
+      return await res.json();
+    } catch (err) {
+      console.warn('[API Service] saveSmtpConfig error:', err.message);
+      return null;
+    }
   }
 };
+

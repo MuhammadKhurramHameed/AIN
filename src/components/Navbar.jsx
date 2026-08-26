@@ -7,7 +7,7 @@ export const DemoRoleBar = () => {
 
   const roleChips = [
     { code: "SUPER_ADMIN", label: "Super Admin", icon: Shield },
-    { code: "MOITT_AUDITOR", label: "MoITT Auditor", icon: Verified },
+    { code: "MOITT_AUDITOR", label: "AIN Auditor", icon: Verified },
     { code: "CONSORTIUM_ADMIN", label: "Consortium Admin", icon: Building2 },
     { code: "TRAINER", label: "Trainer", icon: Users },
     { code: "CONTENT_REVIEWER", label: "Content Reviewer", icon: BookOpen },

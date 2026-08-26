@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { INITIAL_DATA } from '../data/initialData';
 import { apiService } from '../services/api';
+import { exportStructuredReportPDF } from '../utils/pdfExport';
 
 const AppContext = createContext();
 
@@ -14,6 +15,8 @@ export const ROLE_CONFIGS = {
     menu: [
       { id: "admin-oversight", label: "National Oversight", icon: "LayoutDashboard" },
       { id: "user-management", label: "User Directory", icon: "Users" },
+      { id: "trainer-approval", label: "Trainer Accreditation", icon: "UserCheck" },
+      { id: "course-gatekeeper", label: "Course Gatekeeper", icon: "ShieldCheck" },
       { id: "ai-control", label: "AI Control Center", icon: "Cpu" },
       { id: "admin-partners", label: "Consortium Partners", icon: "Building2" },
       { id: "curriculum-builder", label: "Track Architecture", icon: "Layers" },
@@ -29,14 +32,16 @@ export const ROLE_CONFIGS = {
     ]
   },
   MOITT_AUDITOR: {
-    label: "MoITT Auditor",
+    label: "AIN Auditor",
     code: "MOITT_AUDITOR",
     defaultView: "admin-oversight",
-    title: "Ministry Verification & Analytics",
+    title: "AIN Compliance & Analytics",
     subtitle: "Read-Only Compliance & Live Telemetry Inspector",
     menu: [
       { id: "admin-oversight", label: "National Analytics", icon: "LayoutDashboard" },
       { id: "user-management", label: "User Directory", icon: "Users" },
+      { id: "trainer-approval", label: "Trainer Audit Index", icon: "UserCheck" },
+      { id: "course-gatekeeper", label: "Course Release Audit", icon: "ShieldCheck" },
       { id: "ai-control", label: "AI Usage Logs", icon: "Cpu" },
       { id: "tickets", label: "Helpdesk Audit", icon: "LifeBuoy" },
       { id: "integrations", label: "System Integrations", icon: "Network" },
@@ -68,6 +73,7 @@ export const ROLE_CONFIGS = {
     subtitle: "Cohort Delivery, Attendance & Evaluation Workspace",
     menu: [
       { id: "trainer-hub", label: "Trainer Dashboard", icon: "Users" },
+      { id: "trainer-proposals", label: "Course Proposals", icon: "Lightbulb" },
       { id: "trainee-classroom", label: "Live Classroom", icon: "Video" },
       { id: "python-lab", label: "Python AI Lab", icon: "Code" },
       { id: "trainer-grading", label: "Grading & Feedback", icon: "FileText" },
@@ -84,6 +90,7 @@ export const ROLE_CONFIGS = {
     subtitle: "Pedagogical Standards & Coursework Validation",
     menu: [
       { id: "curriculum-kanban", label: "Curriculum Review", icon: "Kanban" },
+      { id: "course-studio", label: "Course Design Studio", icon: "FileCode" },
       { id: "question-bank", label: "Item Bank Quality", icon: "BookOpen" },
       { id: "curriculum-builder", label: "Track Standards", icon: "Layers" }
     ]
@@ -96,6 +103,7 @@ export const ROLE_CONFIGS = {
     subtitle: "Track 1: Students & Fresh Graduates (Applied ML)",
     menu: [
       { id: "trainee-dashboard", label: "My Dashboard", icon: "LayoutDashboard" },
+      { id: "onboarding", label: "Orientation Walkthrough", icon: "Sparkles" },
       { id: "trainee-classroom", label: "Live Classroom", icon: "Video" },
       { id: "python-lab", label: "Python AI Code Lab", icon: "Code" },
       { id: "trainee-assessment", label: "Online Assessment", icon: "FileText" },
@@ -133,6 +141,141 @@ export const AppProvider = ({ children }) => {
   const [capstoneScore, setCapstoneScore] = useState(92.5);
   const [isBackendConnected, setIsBackendConnected] = useState(false);
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  // Course Proposals Pipeline State
+  const [courseProposals, setCourseProposals] = useState([
+    {
+      id: "prop-101",
+      title: "LLM Fine-Tuning & Quantization Techniques",
+      track_id: "track-1",
+      track_title: "Track 1: Applied MLOps & Generative AI",
+      level_code: "LEVEL_2_APPLIED",
+      target_hours: 24,
+      status: "PROPOSED",
+      proposed_by: { name: "Dr. Zeeshan Haider", role: "TRAINER" },
+      proposed_at: "2026-08-25 14:30",
+      syllabus_outline: ["Module 1: LoRA & QLoRA Fundamentals", "Module 2: Unsloth & Transformers Fine-Tuning", "Module 3: Int4 Quantization & vLLM Serving", "Module 4: Benchmark Evaluation & MLOps"],
+      reference_material: "github.com/naiai-pakistan/llm-finetuning",
+      suggested_quiz_concepts: "LoRA rank selection, memory calculation for 7B models"
+    },
+    {
+      id: "prop-102",
+      title: "Autonomous Agent Systems with LangGraph",
+      track_id: "track-1",
+      track_title: "Track 1: Applied MLOps & Generative AI",
+      level_code: "LEVEL_2_APPLIED",
+      target_hours: 20,
+      status: "PENDING_ADMIN_APPROVAL",
+      proposed_by: { name: "Engr. Saad Farooq", role: "TRAINER" },
+      proposed_at: "2026-08-24 09:15",
+      syllabus_outline: ["Module 1: ReAct Pattern & Tool Binding", "Module 2: State Graphs & Memory Checkpoints", "Module 3: Multi-Agent Orchestration", "Module 4: Production Evaluation"],
+      reference_material: "github.com/naiai-pakistan/langgraph-agents",
+      suggested_quiz_concepts: "State mutation, recursion limits",
+      built_assets: {
+        builder_name: "Instructional Design Team",
+        video_url: "https://www.youtube.com/watch?v=aircAruvnKk",
+        video_duration_minutes: 210,
+        lesson_count: 8,
+        quiz_count: 2,
+        lab_notebook_url: "https://github.com/naiai-pakistan/hands-on-lab.git"
+      }
+    }
+  ]);
+
+  // Trainer Application Intake State
+  const [pendingTrainers, setPendingTrainers] = useState([
+    {
+      id: "TR-APP-8821",
+      full_name: "Dr. Hammad Mustafa",
+      email: "hammad.mustafa@fast.edu.pk",
+      cnic: "35201-1234567-1",
+      institution: "FAST NUST Joint AI Lab",
+      education: "PhD in Artificial Intelligence — 20 Years",
+      experience_years: 7,
+      assigned_track: "Track 1: Applied MLOps",
+      specializations: ["Machine Learning", "Deep Learning", "MLOps & Deployment"],
+      portfolio_url: "https://github.com/hammad-mustafa",
+      status: "PENDING_APPROVAL"
+    },
+    {
+      id: "TR-APP-7740",
+      full_name: "Dr. Mariam Farooq",
+      email: "mariam.farooq@lums.edu.pk",
+      cnic: "42101-9988776-3",
+      institution: "LUMS School of Science & Engineering",
+      education: "PhD in Computer Vision — 19 Years",
+      experience_years: 10,
+      assigned_track: "Track 3: Sectoral AI",
+      specializations: ["Computer Vision", "AI Ethics & Governance"],
+      portfolio_url: "https://scholar.google.com",
+      status: "APPROVED"
+    }
+  ]);
+
+  // Helpdesk Tickets State
+  const [tickets, setTickets] = useState([
+    {
+      id: "TICK-9041",
+      subject: "CNIC Verification Error during Public Intake",
+      category: "Identity & NADRA Verification",
+      priority: "HIGH",
+      status: "OPEN",
+      submittedBy: "Fatima Khan",
+      role: "TRAINEE",
+      createdAt: "2026-08-25 11:20",
+      assignedTo: "Super Admin Desk",
+      description: "My CNIC 35201-1234567-8 showed non-verified status during intake.",
+      replies: [
+        { id: "r1", author: "AIN Helpdesk", role: "SUPER_ADMIN", text: "We have re-triggered NADRA API lookup. Please verify now.", timestamp: "2026-08-25 12:00" }
+      ]
+    },
+    {
+      id: "TICK-8812",
+      subject: "Lab Environment GPU Memory Limit Exceeded",
+      category: "Python AI Lab Environment",
+      priority: "MEDIUM",
+      status: "IN_PROGRESS",
+      submittedBy: "Dr. Zeeshan Haider",
+      role: "TRAINER",
+      createdAt: "2026-08-24 16:45",
+      assignedTo: "Infrastructure Ops",
+      description: "Students in Batch-04 reporting CUDA Out of Memory on PyTorch model train.",
+      replies: []
+    }
+  ]);
+
+  // Report Automation & Scheduler State
+  const [reportSchedules, setReportSchedules] = useState([
+    {
+      _id: "sched-default-1",
+      title: "Daily National Executive Briefing",
+      reportType: "FULL_EXECUTIVE",
+      frequency: "DAILY",
+      scheduledTime: "18:00",
+      actionType: "BOTH",
+      recipientEmails: ["dg.ai@moitt.gov.pk", "auditor.lead@ain.gov.pk"],
+      emailSubject: "MoITT National AI Capacity Initiative — Daily Executive KPI Briefing",
+      notes: "Automated EOD KPI brief with provincial capacity distribution and affirmative female ratios.",
+      isActive: true,
+      lastDispatchedAt: "2026-08-25 18:00"
+    }
+  ]);
+
+  const [reportDispatchHistory, setReportDispatchHistory] = useState([
+    {
+      id: "disp-901",
+      dispatchedAt: "2026-08-25 18:00",
+      reportTitle: "National Executive Briefing",
+      reportType: "FULL_EXECUTIVE",
+      actionType: "BOTH",
+      recipients: ["dg.ai@moitt.gov.pk", "auditor.lead@ain.gov.pk"],
+      status: "SUCCESS",
+      message: "Delivered to 2 recipients & PDF downloaded locally"
+    }
+  ]);
+
+  const [activeSchedulerToast, setActiveSchedulerToast] = useState(null);
+  const [lastTriggeredMinute, setLastTriggeredMinute] = useState("");
 
   // Initial Fetch from Backend Server
   useEffect(() => {
@@ -180,6 +323,11 @@ export const AppProvider = ({ children }) => {
             status: t.status
           })));
         }
+
+        const schedRes = await apiService.getReportSchedules();
+        if (schedRes && schedRes.success && schedRes.data.length > 0) {
+          setReportSchedules(schedRes.data);
+        }
       }
     }
     loadBackendData();
@@ -214,7 +362,7 @@ export const AppProvider = ({ children }) => {
   };
 
   const navigateTo = (viewId) => {
-    const publicViews = ["landing-page", "sign-in", "2fa-verify", "public-intake", "authenticator"];
+    const publicViews = ["landing-page", "sign-in", "sign-up", "2fa-verify", "public-intake", "authenticator", "trainer-register", "onboarding"];
     if (publicViews.includes(viewId)) {
       setCurrentView(viewId);
       return;
@@ -224,12 +372,103 @@ export const AppProvider = ({ children }) => {
       return;
     }
     const config = ROLE_CONFIGS[currentRole];
-    const isAllowed = config.menu.some(m => m.id === viewId) || publicViews.includes(viewId);
+    const isAllowed = config.menu?.some(m => m.id === viewId) || publicViews.includes(viewId);
     if (isAllowed) {
       setCurrentView(viewId);
     } else {
       setCurrentView(config.defaultView);
     }
+  };
+
+  // Course Proposal Handlers
+  const proposeCourse = (proposalData) => {
+    const newProp = {
+      id: `prop-${Math.floor(Math.random() * 900 + 100)}`,
+      ...proposalData,
+      status: "PROPOSED",
+      proposed_by: { name: authUser?.name || "Dr. Zeeshan Haider", role: currentRole },
+      proposed_at: new Date().toISOString().replace("T", " ").substring(0, 16)
+    };
+    setCourseProposals(prev => [newProp, ...prev]);
+    return newProp;
+  };
+
+  const startBuildingProposal = (proposalId) => {
+    setCourseProposals(prev => prev.map(p => p.id === proposalId ? { ...p, status: "IN_PRODUCTION" } : p));
+  };
+
+  const submitCourseForApproval = (proposalId, builderData) => {
+    setCourseProposals(prev => prev.map(p => p.id === proposalId ? {
+      ...p,
+      status: "PENDING_ADMIN_APPROVAL",
+      built_assets: {
+        builder_name: authUser?.name || "Instructional Designer",
+        ...builderData
+      }
+    } : p));
+  };
+
+  const approveAndPublishCourse = (proposalId) => {
+    setCourseProposals(prev => prev.map(p => p.id === proposalId ? { ...p, status: "PUBLISHED_LIVE" } : p));
+  };
+
+  const rejectCoursePush = (proposalId, reason) => {
+    setCourseProposals(prev => prev.map(p => p.id === proposalId ? { ...p, status: "PROPOSED", revision_notes: reason } : p));
+  };
+
+  // Trainer Application Handlers
+  const registerTrainer = (formData) => {
+    const newTrainer = {
+      id: `TR-APP-${Math.floor(Math.random() * 9000 + 1000)}`,
+      ...formData,
+      status: "PENDING_APPROVAL"
+    };
+    setPendingTrainers(prev => [newTrainer, ...prev]);
+    return newTrainer;
+  };
+
+  const approveTrainer = (trainerId) => {
+    setPendingTrainers(prev => prev.map(t => t.id === trainerId ? { ...t, status: "APPROVED" } : t));
+  };
+
+  const rejectTrainer = (trainerId, reason) => {
+    setPendingTrainers(prev => prev.map(t => t.id === trainerId ? { ...t, status: "REJECTED", rejection_reason: reason } : t));
+  };
+
+  // Ticket Helpdesk Handlers
+  const createTicket = (ticketData) => {
+    const newTicket = {
+      id: `TICK-${Math.floor(Math.random() * 9000 + 1000)}`,
+      ...ticketData,
+      status: "OPEN",
+      createdAt: new Date().toISOString().replace("T", " ").substring(0, 16),
+      replies: []
+    };
+    setTickets(prev => [newTicket, ...prev]);
+    return newTicket;
+  };
+
+  const replyToTicket = (ticketId, text) => {
+    const newReply = {
+      id: `r-${Date.now()}`,
+      author: authUser?.name || "Support Officer",
+      role: currentRole,
+      text,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 16)
+    };
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, replies: [...t.replies, newReply] } : t));
+  };
+
+  const updateTicketStatus = (ticketId, status) => {
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, status } : t));
+  };
+
+  const assignTicket = (ticketId, assignee) => {
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, assignedTo: assignee } : t));
+  };
+
+  const updateTicketPriority = (ticketId, priority) => {
+    setTickets(prev => prev.map(t => t.id === ticketId ? { ...t, priority } : t));
   };
 
   const toggleSidebar = () => setIsSidebarCollapsed(prev => !prev);
@@ -321,7 +560,7 @@ export const AppProvider = ({ children }) => {
       id: res && res.success ? res.data._id : `cons-${partners.length + 1}`,
       name: partnerData.name,
       email: partnerData.email,
-      mou_ref: partnerData.mou_ref || `MOU-MoITT-2026-00${partners.length + 1}`,
+      mou_ref: partnerData.mou_ref || `MOU-AIN-2026-00${partners.length + 1}`,
       allocated_capacity: parseInt(partnerData.allocated_capacity) || 2000,
       enrolled: 0,
       active_cohorts: 0,
@@ -329,6 +568,188 @@ export const AppProvider = ({ children }) => {
     };
     setPartners(prev => [...prev, newPartner]);
   };
+
+  // Report Dispatcher (Both Automated & Manual Test)
+  const triggerReportDispatch = async (scheduleData, isManualTest = false) => {
+    const reportType = scheduleData.reportType || "FULL_EXECUTIVE";
+    const reportTitle = scheduleData.title || "Executive Briefing Report";
+    const actionType = scheduleData.actionType || "BOTH";
+    const recipients = scheduleData.recipientEmails || [];
+    const timestampStr = new Date().toISOString().replace("T", " ").substring(0, 16);
+
+    let downloadSuccess = true;
+    let emailSuccess = true;
+
+    // 1. Auto-Download PDF to Disk
+    if (actionType === "DOWNLOAD_ONLY" || actionType === "BOTH") {
+      downloadSuccess = await exportStructuredReportPDF({
+        reportType,
+        programme,
+        tracks,
+        partners,
+        provincialStats,
+        filename: `${reportTitle.replace(/[^a-zA-Z0-9_-]/g, '_')}_${new Date().toISOString().slice(0, 10)}.pdf`
+      });
+    }
+
+    // 2. Auto-Email Snapshot to Stakeholders
+    if (actionType === "EMAIL_ONLY" || actionType === "BOTH") {
+      const emailPayload = {
+        scheduleId: scheduleData._id,
+        reportType,
+        reportTitle,
+        recipients,
+        subject: scheduleData.emailSubject || `MoITT National AI Executive Report — ${reportTitle}`,
+        notes: scheduleData.notes || "Automated scheduled dispatch from Synapse LMS Control Plane.",
+        metricsSnapshot: {
+          registered_count: programme.registered_count,
+          target_participants: programme.target_participants,
+          female_registered_count: programme.female_registered_count,
+          femalePct: ((programme.female_registered_count / programme.registered_count) * 100).toFixed(1),
+          verified_hours_total: programme.verified_hours_total,
+          certificates_issued: programme.certificates_issued
+        },
+        actor: isManualTest ? `${authUser?.name || 'Super Admin'} (Manual Test)` : "Automated Report Cron Worker"
+      };
+
+      const emailRes = await apiService.sendReportEmail(emailPayload);
+      if (!emailRes || !emailRes.success) {
+        emailSuccess = false;
+      }
+    }
+
+    // Record in local dispatch history
+    const historyItem = {
+      id: `disp-${Date.now()}`,
+      dispatchedAt: timestampStr,
+      reportTitle,
+      reportType,
+      actionType,
+      recipients,
+      status: downloadSuccess && emailSuccess ? "SUCCESS" : "PARTIAL",
+      message: `${isManualTest ? "[Manual Test] " : ""}${
+        actionType === "BOTH"
+          ? `Delivered to ${recipients.length} recipients & downloaded PDF locally.`
+          : actionType === "EMAIL_ONLY"
+          ? `Delivered email snapshot to ${recipients.length} recipients.`
+          : "Downloaded PDF report to device."
+      }`
+    };
+
+    setReportDispatchHistory(prev => [historyItem, ...prev]);
+
+    // Update schedule lastDispatchedAt
+    if (scheduleData._id) {
+      setReportSchedules(prev => prev.map(s => s._id === scheduleData._id ? { ...s, lastDispatchedAt: timestampStr } : s));
+    }
+
+    // Append to Compliance Audit Trail
+    const auditRecord = {
+      id: `log-${Math.floor(Math.random() * 90000 + 10000)}`,
+      timestamp: new Date().toISOString().replace("T", " ").substring(0, 19),
+      actor: isManualTest ? (authUser?.name || "Super Admin") : "Executive Scheduler Daemon",
+      action: isManualTest ? "REPORT_MANUAL_DISPATCH_TRIGGERED" : "REPORT_SCHEDULED_AUTO_DISPATCH",
+      entity: `Report: ${reportTitle} (${reportType})`,
+      ip: "127.0.0.1",
+      payload: { actionType, recipients, downloadSuccess, emailSuccess }
+    };
+    setAuditLogs(prev => [auditRecord, ...prev]);
+
+    // Show top notification toast
+    setActiveSchedulerToast({
+      title: isManualTest ? "Instant Dispatch Completed" : "Automated Report Executed",
+      message: `${reportTitle} — ${
+        actionType === "BOTH"
+          ? `downloaded & emailed to ${recipients.join(", ")}`
+          : actionType === "EMAIL_ONLY"
+          ? `emailed to ${recipients.join(", ")}`
+          : "downloaded to local disk"
+      }`,
+      time: timestampStr
+    });
+
+    setTimeout(() => {
+      setActiveSchedulerToast(null);
+    }, 7000);
+
+    return { downloadSuccess, emailSuccess, historyItem };
+  };
+
+  // Save / Update Schedule
+  const saveReportSchedule = async (scheduleData) => {
+    const res = await apiService.saveReportSchedule(scheduleData);
+    if (res && res.success && res.data) {
+      setReportSchedules(prev => {
+        const existingIdx = prev.findIndex(s => s._id === res.data._id);
+        if (existingIdx !== -1) {
+          const updated = [...prev];
+          updated[existingIdx] = res.data;
+          return updated;
+        }
+        return [res.data, ...prev];
+      });
+      return res.data;
+    } else {
+      // Local fallback
+      const fallbackSched = {
+        _id: scheduleData._id || `sched-${Date.now()}`,
+        ...scheduleData,
+        lastDispatchedAt: scheduleData.lastDispatchedAt || null
+      };
+      setReportSchedules(prev => {
+        const existingIdx = prev.findIndex(s => s._id === fallbackSched._id);
+        if (existingIdx !== -1) {
+          const updated = [...prev];
+          updated[existingIdx] = fallbackSched;
+          return updated;
+        }
+        return [fallbackSched, ...prev];
+      });
+      return fallbackSched;
+    }
+  };
+
+  // Delete Schedule
+  const deleteReportSchedule = async (scheduleId) => {
+    await apiService.deleteReportSchedule(scheduleId);
+    setReportSchedules(prev => prev.filter(s => s._id !== scheduleId));
+  };
+
+  const dismissSchedulerToast = () => setActiveSchedulerToast(null);
+
+  // Background Auto-Scheduler Loop (Ticks every 10 seconds)
+  useEffect(() => {
+    const schedulerTimer = setInterval(async () => {
+      const now = new Date();
+      const currentHH = String(now.getHours()).padStart(2, '0');
+      const currentMM = String(now.getMinutes()).padStart(2, '0');
+      const currentMinuteStr = `${currentHH}:${currentMM}`;
+
+      if (lastTriggeredMinute === currentMinuteStr) return;
+
+      for (const sched of reportSchedules) {
+        if (!sched.isActive) continue;
+
+        let shouldTrigger = false;
+        if (sched.frequency === 'DAILY' || sched.frequency === 'CUSTOM_TIME') {
+          shouldTrigger = sched.scheduledTime === currentMinuteStr;
+        } else if (sched.frequency === 'EVERY_6_HOURS') {
+          shouldTrigger = (now.getHours() % 6 === 0) && (now.getMinutes() === 0);
+        } else if (sched.frequency === 'EVERY_12_HOURS') {
+          shouldTrigger = (now.getHours() % 12 === 0) && (now.getMinutes() === 0);
+        } else if (sched.frequency === 'EVERY_24_HOURS') {
+          shouldTrigger = (now.getHours() === 0) && (now.getMinutes() === 0);
+        }
+
+        if (shouldTrigger) {
+          setLastTriggeredMinute(currentMinuteStr);
+          await triggerReportDispatch(sched, false);
+        }
+      }
+    }, 10000);
+
+    return () => clearInterval(schedulerTimer);
+  }, [reportSchedules, lastTriggeredMinute, programme, tracks, partners, provincialStats]);
 
   return (
     <AppContext.Provider value={{
@@ -357,6 +778,29 @@ export const AppProvider = ({ children }) => {
       capstoneScore,
       isBackendConnected,
       isSidebarCollapsed,
+      courseProposals,
+      pendingTrainers,
+      tickets,
+      reportSchedules,
+      reportDispatchHistory,
+      activeSchedulerToast,
+      saveReportSchedule,
+      deleteReportSchedule,
+      triggerReportDispatch,
+      dismissSchedulerToast,
+      proposeCourse,
+      startBuildingProposal,
+      submitCourseForApproval,
+      approveAndPublishCourse,
+      rejectCoursePush,
+      registerTrainer,
+      approveTrainer,
+      rejectTrainer,
+      createTicket,
+      replyToTicket,
+      updateTicketStatus,
+      assignTicket,
+      updateTicketPriority,
       toggleSidebar,
       setCapstoneScore,
       switchRole,

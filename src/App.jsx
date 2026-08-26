@@ -26,6 +26,7 @@ import { SecurityView } from './views/SecurityView';
 
 import { LandingPageView } from './views/LandingPageView';
 import { SignInView } from './views/SignInView';
+import { SignUpView } from './views/SignUpView';
 import { TwoFactorVerifyView } from './views/TwoFactorVerifyView';
 import { OnboardingWalkthroughView } from './views/OnboardingWalkthroughView';
 
@@ -40,6 +41,7 @@ import { CourseBuilderStudioView } from './views/CourseBuilderStudioView';
 const VIEW_MAP = {
   "landing-page": LandingPageView,
   "sign-in": SignInView,
+  "sign-up": SignUpView,
   "2fa-verify": TwoFactorVerifyView,
   "onboarding": OnboardingWalkthroughView,
   "public-intake": PublicIntakeView,
@@ -74,8 +76,8 @@ export const AppContent = () => {
   const { currentView, isAuthenticated, showDemoBar } = useApp();
   const ActiveViewComponent = VIEW_MAP[currentView] || LandingPageView;
 
-  const publicViews = ["landing-page", "sign-in", "2fa-verify", "public-intake", "authenticator", "python-lab", "tickets"];
-  const isPublicPage = publicViews.includes(currentView) || !isAuthenticated;
+  const publicViews = ["landing-page", "sign-in", "sign-up", "2fa-verify", "public-intake", "authenticator", "trainer-register", "onboarding"];
+  const isPublicPage = !isAuthenticated || publicViews.includes(currentView);
 
   return (
     <div className={`app-wrapper ${showDemoBar ? "has-demo-bar" : ""}`}>

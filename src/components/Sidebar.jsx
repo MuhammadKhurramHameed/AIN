@@ -38,8 +38,8 @@ export const Sidebar = () => {
             </div>
             {!isSidebarCollapsed && (
               <div className="brand-title-group">
-                <h2>Synapse LMS</h2>
-                <p>MoITT National AI</p>
+                <h2>AIN LMS</h2>
+                <p>National AI Network</p>
               </div>
             )}
           </a>

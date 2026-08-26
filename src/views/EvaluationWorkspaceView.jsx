@@ -10,9 +10,23 @@ export const EvaluationWorkspaceView = () => {
 
   const totalScore = s1 + s2 + s3;
 
+  const [feedback, setFeedback] = useState("Great work on model architecture and MLflow deployment SOP.");
+
   const handleApprove = () => {
-    alert("Capstone Evaluation Approved!\n\nCertificate NAIAI-2026-884920 has been digitally signed using root key Ed25519 and dispatched to trainee Fatima Khan.");
+    if (totalScore < 60) {
+      alert(`Cannot Approve Capstone: Total Score (${totalScore.toFixed(1)}/100) is below the minimum passing threshold of 60 points. Please request revision instead.`);
+      return;
+    }
+    alert(`Capstone Evaluation Approved!\n\nScore: ${totalScore.toFixed(1)}/100\nFeedback: ${feedback}\nCertificate NAIAI-2026-884920 has been digitally signed using root key Ed25519 and dispatched to trainee Fatima Khan.`);
     navigateTo("authenticator");
+  };
+
+  const handleRequestRevision = () => {
+    if (!feedback.trim()) {
+      alert("Please provide revision feedback notes before sending revision request.");
+      return;
+    }
+    alert(`Revision Requested for Submission #884920.\n\nFeedback sent to trainee Fatima Khan:\n"${feedback}"`);
   };
 
   return (
@@ -100,18 +114,29 @@ async def predict_crop_disease(file: UploadFile):
                 />
               </div>
 
+              <div className="form-group" style={{ marginTop: "14px" }}>
+                <label className="form-label">Trainer SME Evaluation Feedback Notes *</label>
+                <textarea
+                  className="form-control"
+                  rows="2"
+                  value={feedback}
+                  onChange={(e) => setFeedback(e.target.value)}
+                  placeholder="Provide qualitative feedback for trainee..."
+                ></textarea>
+              </div>
+
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginTop: "16px", paddingTop: "12px", borderTop: "1px solid var(--border-subtle)" }}>
                 <span style={{ fontWeight: 700, fontSize: "15px" }}>Total Score:</span>
-                <span style={{ fontFamily: "var(--font-headline)", fontSize: "22px", fontWeight: 800, color: "var(--success)" }}>
-                  {totalScore.toFixed(1)} / 100
+                <span style={{ fontFamily: "var(--font-headline)", fontSize: "22px", fontWeight: 800, color: totalScore >= 60 ? "var(--success)" : "var(--error)" }}>
+                  {totalScore.toFixed(1)} / 100 {totalScore < 60 && "(Below Passing 60)"}
                 </span>
               </div>
             </div>
 
             <div style={{ marginTop: "20px", display: "flex", justifyContent: "flex-end", gap: "12px" }}>
-              <button className="btn btn-secondary">Request Revision</button>
+              <button className="btn btn-secondary" onClick={handleRequestRevision}>Request Revision</button>
               <button className="btn btn-primary btn-lg" onClick={handleApprove}>
-                <Award size={18} /> Approve Capstone & Issue Certificate
+                <Award size={18} /> Approve Capstone &amp; Issue Certificate
               </button>
             </div>
           </div>

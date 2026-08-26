@@ -54,6 +54,27 @@ export const QuestionBankView = () => {
 
   const handleAddSubmit = async (e) => {
     e.preventDefault();
+    if (!form.title.trim() || form.title.trim().length < 5) {
+      alert("Please enter a question prompt statement of at least 5 characters.");
+      return;
+    }
+
+    if (isNaN(Number(form.points)) || Number(form.points) <= 0) {
+      alert("Points must be a positive number greater than 0.");
+      return;
+    }
+
+    if (form.type === 'MCQ') {
+      if (!form.optionA.trim() || !form.optionB.trim()) {
+        alert("For MCQ questions, Option A and Option B are required.");
+        return;
+      }
+      if (!form.correctAnswer.trim()) {
+        alert("Please enter the correct answer statement.");
+        return;
+      }
+    }
+
     const options = form.type === 'MCQ' ? [form.optionA, form.optionB, form.optionC, form.optionD].filter(Boolean) : [];
     
     const newQ = {

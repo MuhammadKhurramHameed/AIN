@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { useApp } from '../context/AppContext';
 import { apiService } from '../services/api';
 import { 
   Terminal, 
@@ -17,7 +18,8 @@ import {
   Share2, 
   CheckCircle2,
   Key,
-  X
+  X,
+  ArrowLeft
 } from 'lucide-react';
 
 const STARTER_TEMPLATES = [
@@ -277,6 +279,7 @@ print(f"OVERALL INITIATIVE STATUS: {'✅ LAWFULLY COMPLIANT' if national_female_
 ];
 
 export const PythonCodeLabView = () => {
+  const { navigateTo, roleConfig } = useApp();
   const [activeTemplateId, setActiveTemplateId] = useState(STARTER_TEMPLATES[0].id);
   const [code, setCode] = useState(STARTER_TEMPLATES[0].code);
   const [terminalOutput, setTerminalOutput] = useState("");
@@ -1193,6 +1196,14 @@ sys.stderr = _sys_err
           </div>
 
           <div style={{ display: "flex", gap: "10px", alignItems: "center", flexWrap: "wrap" }}>
+            <button 
+              className="btn btn-secondary btn-sm" 
+              onClick={() => navigateTo(roleConfig?.defaultView || "trainee-dashboard")}
+              title="Return to Dashboard"
+              style={{ fontWeight: 600, color: "var(--primary)" }}
+            >
+              <ArrowLeft size={14} /> Back to Dashboard
+            </button>
             <button 
               className="btn btn-secondary btn-sm" 
               onClick={() => { setTempKey(geminiKey); setShowKeyModal(true); }}

@@ -55,7 +55,7 @@ export const OnboardingWalkthroughView = () => {
           <div className="stitch-step-circle">
             <span className="material-symbols-outlined" style={{ fontSize: "20px" }}>analytics</span>
           </div>
-          <span className="stitch-step-label">2. Regional Quota</span>
+          <span className="stitch-step-label">2. Regional Domicile</span>
         </div>
 
         <div className={`stitch-step-node ${currentStep >= 3 ? 'active' : ''}`} onClick={() => setCurrentStep(3)}>
@@ -132,7 +132,7 @@ export const OnboardingWalkthroughView = () => {
 
             <div style={{ display: "flex", justifyContent: "flex-end", paddingTop: "12px" }}>
               <button type="submit" className="btn btn-primary btn-lg" style={{ gap: "8px" }}>
-                Proceed to Regional Quota Check
+                Proceed to Regional Selection
                 <span className="material-symbols-outlined" style={{ fontSize: "18px" }}>arrow_forward</span>
               </button>
             </div>
@@ -142,7 +142,7 @@ export const OnboardingWalkthroughView = () => {
         {currentStep === 2 && (
           <form onSubmit={handleNext} style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
             <h2 style={{ fontFamily: "var(--font-headline)", fontSize: "18px", fontWeight: 700, color: "#0f172a", borderBottom: "1px solid #e2e8f0", paddingBottom: "12px" }}>
-              Step 2: Provincial Quota &amp; Gender Allocation
+              Step 2: Regional Domicile &amp; Demographics
             </h2>
 
             <div className="grid-2">
@@ -153,31 +153,33 @@ export const OnboardingWalkthroughView = () => {
                   value={formData.province}
                   onChange={(e) => setFormData({ ...formData, province: e.target.value })}
                 >
-                  <option value="Punjab">Punjab (50% Allocation)</option>
-                  <option value="Sindh">Sindh (23% Allocation)</option>
-                  <option value="KPK">Khyber Pakhtunkhwa (14% Allocation)</option>
-                  <option value="Balochistan">Balochistan (6% Allocation)</option>
-                  <option value="ICT">Islamabad Capital Territory (5% Allocation)</option>
-                  <option value="GB">Gilgit Baltistan (2% Allocation)</option>
+                  <option value="Punjab">Punjab</option>
+                  <option value="Sindh">Sindh</option>
+                  <option value="KPK">Khyber Pakhtunkhwa</option>
+                  <option value="Balochistan">Balochistan</option>
+                  <option value="ICT">Islamabad Capital Territory</option>
+                  <option value="GB">Gilgit-Baltistan</option>
+                  <option value="AJK">Azad Jammu &amp; Kashmir</option>
                 </select>
               </div>
 
               <div className="form-group">
-                <label className="form-label">Gender (≥ 30% Female Quota Enforced) *</label>
+                <label className="form-label">Gender *</label>
                 <select
                   className="form-control form-select"
                   value={formData.gender}
                   onChange={(e) => setFormData({ ...formData, gender: e.target.value })}
                 >
-                  <option value="Female">Female (Priority Reservation)</option>
+                  <option value="Female">Female</option>
                   <option value="Male">Male</option>
+                  <option value="Other">Other / Prefer not to say</option>
                 </select>
               </div>
             </div>
 
             <div style={{ background: "#dcfce7", border: "1px solid #a7f3d0", padding: "14px 16px", borderRadius: "10px", color: "#14532d", fontSize: "13px", display: "flex", alignItems: "center", gap: "8px" }}>
               <span className="material-symbols-outlined" style={{ color: "#16a34a" }}>verified</span>
-              <span>Seat quota confirmed for {formData.province} region. Affirmative Female quota compliance verified.</span>
+              <span>Seat enrollment available for {formData.province} region. Eligibility verified.</span>
             </div>
 
             <div style={{ display: "flex", justifyContent: "space-between", paddingTop: "12px" }}>

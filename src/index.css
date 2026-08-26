@@ -833,6 +833,29 @@ body {
   box-shadow: 0 0 0 3px rgba(29, 78, 216, 0.12);
 }
 
+/* Validation error state for inputs */
+.form-control.input-error {
+  border-color: #fca5a5;
+  background-color: #fef9f9;
+  box-shadow: 0 0 0 2px rgba(220, 38, 38, 0.1);
+}
+
+.form-control.input-error:focus {
+  border-color: #dc2626;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
+/* Floating input error state */
+.floating-input.input-error {
+  border-color: #fca5a5 !important;
+  background-color: #fef9f9;
+}
+
+.floating-input.input-error:focus {
+  border-color: #dc2626 !important;
+  box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.15);
+}
+
 .form-select {
   appearance: none;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%20%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");

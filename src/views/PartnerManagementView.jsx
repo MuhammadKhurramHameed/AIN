@@ -34,10 +34,21 @@ export const PartnerManagementView = () => {
 
   const handleAddPartner = (e) => {
     e.preventDefault();
-    if (!partnerForm.name || !partnerForm.email) {
-      alert("Please fill in partner name and official email.");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    if (!partnerForm.name.trim() || partnerForm.name.length < 3) {
+      alert("Please fill in a valid Consortium Partner Organization name (at least 3 characters).");
       return;
     }
+    if (!emailRegex.test(partnerForm.email.trim())) {
+      alert("Please enter a valid official email address for the partner organization.");
+      return;
+    }
+    if (parseInt(partnerForm.allocated_capacity) <= 0 || isNaN(parseInt(partnerForm.allocated_capacity))) {
+      alert("Allocated capacity must be a positive integer greater than zero.");
+      return;
+    }
+
     addPartner(partnerForm);
     setShowPartnerModal(false);
     setPartnerForm({ name: '', email: '', mou_ref: '', allocated_capacity: 2000 });
@@ -46,10 +57,22 @@ export const PartnerManagementView = () => {
 
   const handleAddTrainer = (e) => {
     e.preventDefault();
-    if (!trainerForm.fullName || !trainerForm.email) {
-      alert("Please fill in trainer name and official email.");
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const cnicRegex = /^\d{5}-\d{7}-\d{1}$/;
+
+    if (!trainerForm.fullName.trim() || trainerForm.fullName.length < 3) {
+      alert("Please enter full trainer name (at least 3 characters).");
       return;
     }
+    if (!emailRegex.test(trainerForm.email.trim())) {
+      alert("Please enter a valid official trainer email address.");
+      return;
+    }
+    if (trainerForm.cnic && !cnicRegex.test(trainerForm.cnic.trim())) {
+      alert("CNIC must follow Pakistani format: 00000-0000000-0.");
+      return;
+    }
+
     addTrainer(trainerForm);
     setShowTrainerModal(false);
     setTrainerForm({ fullName: '', email: '', phone: '', cnic: '', consortiumPartner: 'National University of Sciences & Technology (NUST)', specialization: 'Applied MLOps & Computer Vision' });
@@ -64,11 +87,17 @@ export const PartnerManagementView = () => {
         alert("Please provide a valid non-empty JSON array of trainees.");
         return;
       }
+      const invalidItem = parsed.find(item => !item.fullName || !item.gender || !item.province);
+      if (invalidItem) {
+        alert("Each trainee item in JSON array must include 'fullName', 'gender', and 'province'.");
+        return;
+      }
+
       bulkRegisterTrainees(parsed, "Ministry Oversight Batch Import");
       setShowBulkModal(false);
       alert(`Bulk Registration Completed!\n\n${parsed.length} Trainees successfully imported into national database and quota metrics updated.`);
     } catch (err) {
-      alert("Invalid JSON format.");
+      alert("Invalid JSON format. Please format as a valid JSON array.");
     }
   };
 
